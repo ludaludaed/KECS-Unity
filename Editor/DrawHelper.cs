@@ -1,12 +1,10 @@
+#if UNITY_EDITOR
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEditor.Graphs;
 using UnityEngine;
 
-namespace Ludaludaed.KECS.Unity
+namespace Ludaludaed.KECS.Unity.Editor
 {
     public static class DrawHelper
     {
@@ -115,3 +113,4 @@ namespace Ludaludaed.KECS.Unity
         }
     }
 }
+#endif

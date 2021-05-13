@@ -1,10 +1,11 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
-namespace Ludaludaed.KECS.Unity
+namespace Ludaludaed.KECS.Unity.Editor
 {
     [CustomEditor(typeof(ArchetypeObserver))]
-    public class ArchetypeViewer : Editor
+    public class ArchetypeViewer : UnityEditor.Editor
     {
         private ArchetypeObserver _observer;
 
@@ -49,3 +50,4 @@ namespace Ludaludaed.KECS.Unity
         }
     }
 }
+#endif

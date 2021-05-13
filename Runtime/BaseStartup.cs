@@ -9,10 +9,13 @@ namespace Ludaludaed.KECS.Unity
         public World World;
         public Systems Systems;
 
-        [SerializeField, ReadOnly] private string worldName;
+        [SerializeField]
+#if UNITY_EDITOR
+        [ReadOnly]
+#endif
+        private string worldName;
 
-        [Header("World configuration")] 
-        public int cacheEntitiesCapacity;
+        [Header("World configuration")] public int cacheEntitiesCapacity;
         public int cacheArchetypesCapacity;
         public int cacheComponentsCapacity;
 
@@ -26,7 +29,7 @@ namespace Ludaludaed.KECS.Unity
                     Archetypes = this.cacheArchetypesCapacity,
                     Components = this.cacheComponentsCapacity
                 });
-            
+
 
             Systems = new Systems(World);
             Systems.Add<UnityConversionSystem>();
@@ -46,11 +49,9 @@ namespace Ludaludaed.KECS.Unity
 
         public void Update()
         {
-            if (_isWorking)
-            {
-                World.ExecuteTasks();
-                Systems.Update(Time.deltaTime);
-            }
+            if (!_isWorking) return;
+            World.ExecuteTasks();
+            Systems.Update(Time.deltaTime);
         }
 
         public void FixedUpdate()

@@ -1,11 +1,10 @@
+#if UNITY_EDITOR
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace Ludaludaed.KECS.Unity
+namespace Ludaludaed.KECS.Unity.Editor
 {
     public interface ITypeDrawer
     {
@@ -183,3 +182,4 @@ namespace Ludaludaed.KECS.Unity
         }
     }
 }
+#endif

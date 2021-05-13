@@ -1,7 +1,8 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
-namespace Ludaludaed.KECS.Unity
+namespace Ludaludaed.KECS.Unity.Editor
 {
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyDrawer : PropertyDrawer
@@ -15,3 +16,4 @@ namespace Ludaludaed.KECS.Unity
         }
     }
 }
+#endif

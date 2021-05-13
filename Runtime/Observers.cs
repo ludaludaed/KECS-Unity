@@ -1,7 +1,6 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
-using Unity.Profiling.LowLevel.Unsafe;
 using UnityEngine;
 
 namespace Ludaludaed.KECS.Unity
@@ -106,11 +105,9 @@ namespace Ludaludaed.KECS.Unity
 
         public void OnDestroy()
         {
-            if (World != null)
-            {
-                World.RemoveDebugListener(this);
-                World = null;
-            }
+            if (World == null) return;
+            World.RemoveDebugListener(this);
+            World = null;
         }
     }
 

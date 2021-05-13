@@ -1,11 +1,11 @@
+#if UNITY_EDITOR
 using System;
 using System.IO;
-using System.Text;
 using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 
-namespace Ludaludaed.KECS.Unity
+namespace Ludaludaed.KECS.Unity.Editor
 {
     public class TemplateGenerator : ScriptableObject
     {
@@ -147,3 +147,4 @@ namespace Ludaludaed.KECS.Unity
         }
     }
 }
+#endif

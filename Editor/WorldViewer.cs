@@ -1,10 +1,11 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
-namespace Ludaludaed.KECS.Unity
+namespace Ludaludaed.KECS.Unity.Editor
 {
     [CustomEditor(typeof(WorldObserver))]
-    public class WorldViewer : Editor
+    public class WorldViewer : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
@@ -25,3 +26,4 @@ namespace Ludaludaed.KECS.Unity
         }
     }
 }
+#endif

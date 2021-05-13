@@ -1,12 +1,12 @@
-using System;
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Ludaludaed.KECS.Unity
+namespace Ludaludaed.KECS.Unity.Editor
 {
     [CustomEditor(typeof(SystemsObserver))]
-    public class SystemsViewer : Editor
+    public class SystemsViewer : UnityEditor.Editor
     {
         private SystemsObserver _observer;
 
@@ -65,3 +65,4 @@ namespace Ludaludaed.KECS.Unity
         }
     }
 }
+#endif

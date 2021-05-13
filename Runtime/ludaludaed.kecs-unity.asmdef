@@ -2,7 +2,7 @@
     "name": "ludaludaed.kecs-unity",
     "rootNamespace": "",
     "references": [
-        "GUID:fbc3a3eff27b0684ea5e0bd4b8fe1663"
+        "ludaludaed.kecs"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

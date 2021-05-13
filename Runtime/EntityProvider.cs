@@ -5,7 +5,11 @@ namespace Ludaludaed.KECS.Unity
 {
     public class EntityProvider : MonoBehaviour
     {
-        [SerializeField, ReadOnly] private int entityID = -1;
+        [SerializeField]
+#if UNITY_EDITOR
+        [ReadOnly]
+#endif
+        private int entityID = -1;
 
         private void Start()
         {

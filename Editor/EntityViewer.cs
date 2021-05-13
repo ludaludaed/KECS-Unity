@@ -1,13 +1,14 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace Ludaludaed.KECS.Unity
+namespace Ludaludaed.KECS.Unity.Editor
 {
     [CustomEditor(typeof(EntityObserver))]
-    public class EntityViewer : Editor
+    public class EntityViewer : UnityEditor.Editor
     {
         private static object[] _componentsCache = new object[32];
         private static int[] _componentsIndexes = new int[32];
@@ -163,3 +164,4 @@ namespace Ludaludaed.KECS.Unity
         }
     }
 }
+#endif
