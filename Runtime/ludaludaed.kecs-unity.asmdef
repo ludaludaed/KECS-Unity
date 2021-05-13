@@ -1,0 +1,16 @@
+{
+    "name": "ludaludaed.kecs-unity",
+    "rootNamespace": "",
+    "references": [
+        "GUID:fbc3a3eff27b0684ea5e0bd4b8fe1663"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
