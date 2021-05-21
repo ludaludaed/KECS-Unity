@@ -20,14 +20,14 @@ namespace Ludaludaed.KECS.Unity.Editor
             _observer = null;
         }
 
-        private static void SystemDraw(List<SystemData> data)
+        private static void SystemDraw(GrowList<SystemData> data)
         {
             EditorGUI.indentLevel++;
             var colors = DrawHelper.GetColoredBoxStyle(data.Count);
             for (int i = 0, lenght = data.Count; i < lenght; i++)
             {
                 GUILayout.BeginVertical(colors[i]);
-                var runItem = data[i];
+                var runItem = data.Get(i);
                 var type = runItem.Base.GetType();
                 runItem.IsEnable = EditorGUILayout.ToggleLeft(type.Name, runItem.IsEnable);
                 GUILayout.EndVertical();
