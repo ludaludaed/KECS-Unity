@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Ludaludaed.KECS.Unity
@@ -13,6 +12,7 @@ namespace Ludaludaed.KECS.Unity
             {
                 entity.Set(_serializedData);
             }
+            Destroy(this);
         }
     }
 

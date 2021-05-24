@@ -17,12 +17,14 @@ namespace Ludaludaed.KECS.Unity
                 if (instantiate.GO != null)
                 {
                     var gameObject = instantiate.GO;
+                    var provider = gameObject.GetComponent<EntityProvider>();
                     var newEntity = _world.CreateEntity();
-                    newEntity.Set(new GameObjectComponent() {GameObject = gameObject});
+                    
+                    provider.SetEntity(newEntity);
+                    newEntity.Set(new GameObjectComponent() {GameObject = gameObject, Entity = provider});
                     foreach (var component in gameObject.GetComponents<BaseMonoProvider>())
                     {
                         component.SetComponentToEntity(newEntity);
-                        Object.Destroy(component);
                     }
                 }
                 entity.Destroy();

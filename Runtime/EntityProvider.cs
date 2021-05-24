@@ -10,12 +10,20 @@ namespace Ludaludaed.KECS.Unity
         [ReadOnly]
 #endif
         private int entityID = -1;
+        
+        private Entity _entity;
+        public Entity GetEntity() => _entity;
 
         private void Start()
         {
             var world = Worlds.Get(gameObject.scene.name);
             var entity = world.CreateEntity();
             entity.Event(new InstantiateEventComponent() {GO = gameObject});
+        }
+
+        public void SetEntity(Entity entity)
+        {
+            _entity = entity;
             entityID = entity.Id;
         }
     }
@@ -28,5 +36,6 @@ namespace Ludaludaed.KECS.Unity
     public struct GameObjectComponent
     {
         public GameObject GameObject;
+        public EntityProvider Entity;
     }
 }
