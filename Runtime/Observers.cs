@@ -7,14 +7,13 @@ namespace Ludaludaed.KECS.Unity
 {
     public class WorldObserver : MonoBehaviour, IWorldDebugListener
     {
-        public World World;
-
+        private World _world;
         private Transform _entitiesGO;
         private Transform _archetypesGO;
 
         private bool _isDestroyed = false;
 
-        public readonly Dictionary<int, GameObject> EntityGameObjects = new Dictionary<int, GameObject>(1024);
+        public readonly HandleMap<GameObject> EntityGameObjects = new HandleMap<GameObject>(1024,1024);
 
         public static GameObject Create(World world)
         {
@@ -27,7 +26,7 @@ namespace Ludaludaed.KECS.Unity
             DontDestroyOnLoad(gameObj);
 
             var observer = gameObj.AddComponent<WorldObserver>();
-            observer.World = world;
+            observer._world = world;
             var worldTransform = observer.transform;
 
             observer._entitiesGO = new GameObject("Entities").transform;
@@ -43,38 +42,38 @@ namespace Ludaludaed.KECS.Unity
 
         public WorldInfo GetInfo()
         {
-            return World.GetInfo();
+            return _world.GetInfo();
         }
 
         public void OnEntityCreated(in Entity entity)
         {
             if (_isDestroyed) return;
-            if (!EntityGameObjects.TryGetValue(entity.Id, out var go))
+            if (!EntityGameObjects.Contains(entity.Id))
             {
-                go = new GameObject();
+                var go = new GameObject();
                 go.transform.SetParent(_entitiesGO, false);
                 var unityEntity = go.AddComponent<EntityObserver>();
-                unityEntity.World = World;
                 unityEntity.Entity = entity;
-                EntityGameObjects[entity.Id] = go;
+                go.name = entity.ToString();
+                go.SetActive(true);
+                EntityGameObjects.Set(entity.Id, go);
             }
             else
             {
+                ref var go = ref EntityGameObjects.Get(entity.Id);
                 go.GetComponent<EntityObserver>().Entity = entity;
+                go.name = entity.ToString();
+                go.SetActive(true);
             }
-
-            go.name = entity.ToString();
-            go.SetActive(true);
         }
 
         public void OnEntityDestroyed(in Entity entity)
         {
             if (_isDestroyed) return;
-            if (EntityGameObjects.TryGetValue(entity.Id, out var go))
-            {
-                go.name = entity.ToString();
-                go.SetActive(false);
-            }
+            if (!EntityGameObjects.Contains(entity.Id)) return;
+            var go = EntityGameObjects.Get(entity.Id);
+            go.name = entity.ToString();
+            go.SetActive(false);
         }
 
         public void OnArchetypeCreated(Archetype archetype)
@@ -85,7 +84,6 @@ namespace Ludaludaed.KECS.Unity
             var observer = go.AddComponent<ArchetypeObserver>();
 
             observer.worldObserver = this;
-            observer.World = World;
             observer.Archetype = archetype;
 
             var goName = "Archetype ";
@@ -105,9 +103,9 @@ namespace Ludaludaed.KECS.Unity
 
         public void OnDestroy()
         {
-            if (World == null) return;
-            World.RemoveDebugListener(this);
-            World = null;
+            if (_world == null) return;
+            _world.RemoveDebugListener(this);
+            _world = null;
         }
     }
 
@@ -144,24 +142,20 @@ namespace Ludaludaed.KECS.Unity
 
         public void OnDestroy()
         {
-            if (_systems != null)
-            {
-                _systems.RemoveDebugListener(this);
-                _systems = null;
-            }
+            if (_systems == null) return;
+            _systems.RemoveDebugListener(this);
+            _systems = null;
         }
     }
 
     public sealed class ArchetypeObserver : MonoBehaviour
     {
         public WorldObserver worldObserver;
-        public World World;
         public Archetype Archetype;
     }
 
     public sealed class EntityObserver : MonoBehaviour
     {
-        public World World;
         public Entity Entity;
         public bool[] unfoldedComponents = new bool[256];
     }

@@ -20,42 +20,48 @@ namespace Ludaludaed.KECS.Unity.Editor
         [MenuItem("Assets/Create/KECS/Create Startup", false, -200)]
         private static void CreateStartupTpl()
         {
-            CreateAndRenameAsset($"{GetAssetPath()}/Startup.cs", EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
+            CreateAndRenameAsset($"{GetAssetPath()}/Startup.cs",
+                EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
                 (name) => CreateTemplateInternal(GetTemplateContent(StartupTemplate), name));
         }
-        
+
         [MenuItem("Assets/Create/KECS/Create Component", false, -199)]
         private static void CreateComponentTpl()
         {
-            CreateAndRenameAsset($"{GetAssetPath()}/Component.cs", EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
+            CreateAndRenameAsset($"{GetAssetPath()}/Component.cs",
+                EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
                 (name) => CreateTemplateInternal(GetTemplateContent(ComponentTemplate), name));
         }
 
         [MenuItem("Assets/Create/KECS/Systems/Create BaseSystem", false, -198)]
         private static void CreateInitSystemTpl()
         {
-            CreateAndRenameAsset($"{GetAssetPath()}/BaseSystem.cs", EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
+            CreateAndRenameAsset($"{GetAssetPath()}/BaseSystem.cs",
+                EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
                 (name) => CreateTemplateInternal(GetTemplateContent(BaseSystemTemplate), name));
         }
 
         [MenuItem("Assets/Create/KECS/Systems/Create UpdateSystem", false, -197)]
         private static void CreateUpdateSystemTpl()
         {
-            CreateAndRenameAsset($"{GetAssetPath()}/UpdateSystem.cs", EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
+            CreateAndRenameAsset($"{GetAssetPath()}/UpdateSystem.cs",
+                EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
                 (name) => CreateTemplateInternal(GetTemplateContent(UpdateSystemTemplate), name));
         }
-        
+
         [MenuItem("Assets/Create/KECS/Systems/Create FixedUpdate", false, -196)]
         private static void CreateFixedUpdateSystemTpl()
         {
-            CreateAndRenameAsset($"{GetAssetPath()}/FixedUpdateSystem.cs", EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
+            CreateAndRenameAsset($"{GetAssetPath()}/FixedUpdateSystem.cs",
+                EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
                 (name) => CreateTemplateInternal(GetTemplateContent(FixedUpdateSystemTemplate), name));
         }
-        
+
         [MenuItem("Assets/Create/KECS/Systems/Create LateUpdate", false, -195)]
         private static void CreateLateUpdateSystemTpl()
         {
-            CreateAndRenameAsset($"{GetAssetPath()}/LateUpdateSystem.cs", EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
+            CreateAndRenameAsset($"{GetAssetPath()}/LateUpdateSystem.cs",
+                EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
                 (name) => CreateTemplateInternal(GetTemplateContent(LateUpdateSystemTemplate), name));
         }
 

@@ -26,7 +26,8 @@ namespace Ludaludaed.KECS.Unity.Editor
                 var counter = 0;
                 foreach (var entity in _observer.Archetype)
                 {
-                    if (!ego.TryGetValue(entity.Id, out var entityGo)) continue;
+                    if (!ego.Contains(entity.Id)) continue;
+                    ref var entityGo = ref ego.Get(entity.Id);
                     GUILayout.BeginVertical(colors[counter++]);
                     EditorGUILayout.LabelField(entityGo.name);
                     EditorGUILayout.ObjectField(entityGo, typeof(GameObject), true);

@@ -5,7 +5,6 @@ namespace Ludaludaed.KECS.Unity
 {
     public abstract class BaseStartup : MonoBehaviour
     {
-        private bool _isWorking = false;
         public World World;
         public Systems Systems;
 
@@ -18,16 +17,17 @@ namespace Ludaludaed.KECS.Unity
         [Header("World configuration")] public int cacheEntitiesCapacity;
         public int cacheArchetypesCapacity;
         public int cacheComponentsCapacity;
+        public int filtersComponentsCapacity;
 
         public void Awake()
         {
             worldName = gameObject.scene.name;
-            World = Worlds.Create(worldName,
-                new WorldConfig()
+            World = Worlds.Create(worldName, new WorldConfig()
                 {
-                    Entities = this.cacheEntitiesCapacity,
-                    Archetypes = this.cacheArchetypesCapacity,
-                    Components = this.cacheComponentsCapacity
+                    Entities = cacheEntitiesCapacity,
+                    Archetypes = cacheArchetypesCapacity,
+                    Components = cacheComponentsCapacity,
+                    Filters = filtersComponentsCapacity
                 });
 
 
@@ -42,40 +42,30 @@ namespace Ludaludaed.KECS.Unity
             Bootstrap();
 
             Systems.Initialize();
-            _isWorking = true;
         }
 
         public abstract void Bootstrap();
 
         public void Update()
         {
-            if (!_isWorking) return;
             World.ExecuteTasks();
             Systems.Update(Time.deltaTime);
         }
 
         public void FixedUpdate()
         {
-            if (_isWorking)
-            {
-                Systems.FixedUpdate(Time.fixedDeltaTime);
-            }
+            Systems.FixedUpdate(Time.fixedDeltaTime);
         }
 
         public void LateUpdate()
         {
-            if (_isWorking)
-            {
-                Systems.LateUpdate(Time.deltaTime);
-            }
+            Systems.LateUpdate(Time.deltaTime);
         }
 
         public void OnDestroy()
         {
             Systems.Destroy();
-
             World.Destroy();
-            _isWorking = false;
         }
     }
 }
