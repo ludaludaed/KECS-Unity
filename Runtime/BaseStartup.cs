@@ -17,7 +17,6 @@ namespace Ludaludaed.KECS.Unity
         [Header("World configuration")] public int cacheEntitiesCapacity;
         public int cacheArchetypesCapacity;
         public int cacheComponentsCapacity;
-        public int filtersComponentsCapacity;
 
         public void Awake()
         {
@@ -27,7 +26,6 @@ namespace Ludaludaed.KECS.Unity
                     Entities = cacheEntitiesCapacity,
                     Archetypes = cacheArchetypesCapacity,
                     Components = cacheComponentsCapacity,
-                    Filters = filtersComponentsCapacity
                 });
 
 
