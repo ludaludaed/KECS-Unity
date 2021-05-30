@@ -25,20 +25,20 @@ namespace Ludaludaed.KECS.Unity.Editor
                     _typeDrawers[counter++] = inspector;
                 }
             }
+
             _countOfDrawers = counter;
         }
 
         private static bool TryGetDrawer(Type type, out ITypeDrawer drawer)
         {
             drawer = null;
-            for (int i = 0; i < _countOfDrawers; i++)
+            for (var i = 0; i < _countOfDrawers; i++)
             {
-                if (_typeDrawers[i].IsTypeDrawer(type))
-                {
-                    drawer = _typeDrawers[i];
-                    return true;
-                }
+                if (!_typeDrawers[i].IsTypeDrawer(type)) continue;
+                drawer = _typeDrawers[i];
+                return true;
             }
+
             return false;
         }
 
@@ -51,21 +51,16 @@ namespace Ludaludaed.KECS.Unity.Editor
                 var componentColor = Color.HSVToRGB(hue, 0.7f, 1f);
                 componentColor.a = 0.15f;
 
-                styles[i] = new GUIStyle(GUI.skin.box) {normal = {background = CreateTexture(2, 2, componentColor)}};
+                styles[i] = new GUIStyle(GUI.skin.box) {normal = {background = CreateTexture(componentColor)}};
             }
 
             return styles;
         }
 
-        private static Texture2D CreateTexture(int width, int height, Color color)
+        private static Texture2D CreateTexture(Color color)
         {
-            var pixels = new Color[width * height];
-            for (var i = 0; i < pixels.Length; ++i)
-            {
-                pixels[i] = color;
-            }
-
-            var result = new Texture2D(width, height);
+            var pixels = new[] {color};
+            var result = new Texture2D(1, 1);
             result.SetPixels(pixels);
             result.Apply();
             return result;
@@ -93,7 +88,8 @@ namespace Ludaludaed.KECS.Unity.Editor
 
                 EditorGUILayout.BeginVertical();
 
-                var memberInfos = fieldType.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+                var memberInfos =
+                    fieldType.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
                 foreach (var info in memberInfos)
                 {
                     DrawField(info, fieldValue, info.SetValue);
@@ -107,7 +103,7 @@ namespace Ludaludaed.KECS.Unity.Editor
 
                 EditorGUI.indentLevel = indent;
             }
-            
+
             EditorGUILayout.EndVertical();
             return EditorGUI.EndChangeCheck();
         }

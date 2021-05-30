@@ -93,15 +93,14 @@ namespace Ludaludaed.KECS.Unity.Editor
             var boldFoldout = EditorStyles.foldout;
             boldFoldout.fontStyle = FontStyle.Bold;
 
+            GUILayout.Space(15);
             if (memberInfos.Length > 0)
             {
-                GUILayout.Space(15);
                 _observer.unfoldedComponents[componentIndex] = !EditorGUILayout.Foldout(
                     !_observer.unfoldedComponents[componentIndex], type.Name, true, boldFoldout);
             }
             else
             {
-                GUILayout.Space(15);
                 EditorGUILayout.LabelField(type.Name, boldText);
             }
 
@@ -122,17 +121,9 @@ namespace Ludaludaed.KECS.Unity.Editor
 
                 foreach (var info in memberInfos)
                 {
-                    if (DrawHelper.DrawField(info, component, info.SetValue))
-                    {
-                        changed = true;
-                    }
+                    if (DrawHelper.DrawField(info, component, info.SetValue)) changed = true;
                 }
-
-                if (changed)
-                {
-                    _observer.Entity.Set(component, componentIndex);
-                }
-
+                if (changed) _observer.Entity.Set(component, componentIndex);
                 EditorGUI.indentLevel = indent;
             }
 
@@ -148,11 +139,9 @@ namespace Ludaludaed.KECS.Unity.Editor
 
             for (int i = 0, lenght = EcsTypeManager.ComponentTypesCount; i < lenght; i++)
             {
-                if (!entity.Has(arrayOfComponentsInfos[i].Index))
-                {
-                    componentInfos.Add(arrayOfComponentsInfos[i]);
-                    componentNames.Add(arrayOfComponentsInfos[i].Type.Name);
-                }
+                if (entity.Has(arrayOfComponentsInfos[i].Index)) continue;
+                componentInfos.Add(arrayOfComponentsInfos[i]);
+                componentNames.Add(arrayOfComponentsInfos[i].Type.Name);
             }
 
             var index = EditorGUILayout.Popup(0, componentNames.ToArray());
