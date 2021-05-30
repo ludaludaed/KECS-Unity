@@ -18,7 +18,7 @@ namespace Ludaludaed.KECS.Unity
         {
             var world = Worlds.Get(gameObject.scene.name);
             var entity = world.CreateEntity();
-            entity.Event(new InstantiateEventComponent() {GO = gameObject});
+            entity.SetEvent(new InstantiateEventComponent() {GO = gameObject});
         }
 
         public void SetEntity(Entity entity)
