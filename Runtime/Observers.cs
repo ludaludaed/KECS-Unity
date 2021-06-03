@@ -13,7 +13,7 @@ namespace Ludaludaed.KECS.Unity
 
         private bool _isDestroyed = false;
 
-        public readonly HandleMap<GameObject> EntityGameObjects = new HandleMap<GameObject>(1024,1024);
+        public readonly HandleMap<GameObject> EntityGameObjects = new HandleMap<GameObject>(1024);
 
         public static GameObject Create(World world)
         {
