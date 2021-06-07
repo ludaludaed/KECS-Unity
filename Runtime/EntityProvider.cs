@@ -36,6 +36,7 @@ namespace Ludaludaed.KECS.Unity
     public struct GameObjectComponent
     {
         public GameObject GameObject;
+        public Transform Transform;
         public EntityProvider Entity;
     }
 }

@@ -72,39 +72,41 @@ namespace Ludaludaed.KECS.Unity.Editor
             var fieldType = field.FieldType;
 
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.BeginVertical();
+            
 
             if (TryGetDrawer(fieldType, out var drawer))
             {
+                EditorGUILayout.BeginVertical();
                 var newValue = drawer.DrawAndGetNewValue(fieldType, field.Name, fieldValue, target);
                 setValue(target, newValue);
-            }
-            else
-            {
-                EditorGUILayout.LabelField(field.Name, fieldValue.ToString());
-
-                var indent = EditorGUI.indentLevel;
-                EditorGUI.indentLevel += 1;
-
-                EditorGUILayout.BeginVertical();
-
-                var memberInfos =
-                    fieldType.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-                foreach (var info in memberInfos)
-                {
-                    DrawField(info, fieldValue, info.SetValue);
-                    if (fieldType.IsValueType)
-                    {
-                        setValue(target, fieldValue);
-                    }
-                }
-
                 EditorGUILayout.EndVertical();
-
-                EditorGUI.indentLevel = indent;
             }
+            // else
+            // {
+            //     EditorGUILayout.LabelField(field.Name, fieldValue.ToString());
+            //
+            //     var indent = EditorGUI.indentLevel;
+            //     EditorGUI.indentLevel += 1;
+            //
+            //     EditorGUILayout.BeginVertical();
+            //
+            //     var memberInfos =
+            //         fieldType.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            //     foreach (var info in memberInfos)
+            //     {
+            //         DrawField(info, fieldValue, info.SetValue);
+            //         if (fieldType.IsValueType)
+            //         {
+            //             setValue(target, fieldValue);
+            //         }
+            //     }
+            //
+            //     EditorGUILayout.EndVertical();
+            //
+            //     EditorGUI.indentLevel = indent;
+            // }
 
-            EditorGUILayout.EndVertical();
+            
             return EditorGUI.EndChangeCheck();
         }
     }

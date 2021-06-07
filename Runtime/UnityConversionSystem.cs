@@ -2,9 +2,10 @@ using UnityEngine;
 
 namespace Ludaludaed.KECS.Unity
 {
-    public class UnityConversionSystem:SystemBase, IUpdate
+    public class UnityConversionSystem : SystemBase, IUpdate
     {
         private Filter _filter;
+
         public override void Initialize()
         {
             _filter = _world.Filter().With<InstantiateEventComponent>();
@@ -19,14 +20,16 @@ namespace Ludaludaed.KECS.Unity
                     var gameObject = instantiate.GO;
                     var provider = gameObject.GetComponent<EntityProvider>();
                     var newEntity = _world.CreateEntity();
-                    
+
                     provider.SetEntity(newEntity);
-                    newEntity.Set(new GameObjectComponent() {GameObject = gameObject, Entity = provider});
+                    newEntity.Set(new GameObjectComponent()
+                        {GameObject = gameObject, Transform = gameObject.transform, Entity = provider});
                     foreach (var component in gameObject.GetComponents<BaseMonoProvider>())
                     {
                         component.SetComponentToEntity(newEntity);
                     }
                 }
+
                 entity.Destroy();
             });
         }
