@@ -130,7 +130,7 @@ namespace Ludaludaed.KECS.Unity.Editor
             GUILayout.EndVertical();
         }
 
-        private static void DrawAddComponentMenu(Entity entity)
+        private static void DrawAddComponentMenu(in Entity entity)
         {
             var componentInfos = new List<EcsTypeManager.TypeInfo>();
             var componentNames = new List<string>() {"Add"};
@@ -143,13 +143,10 @@ namespace Ludaludaed.KECS.Unity.Editor
                 componentInfos.Add(arrayOfComponentsInfos[i]);
                 componentNames.Add(arrayOfComponentsInfos[i].Type.Name);
             }
-
             var index = EditorGUILayout.Popup(0, componentNames.ToArray());
-
-            if (index > 0)
-            {
-                entity.Set(Activator.CreateInstance(componentInfos[index - 1].Type), componentInfos[index - 1].Index);
-            }
+            if (index <= 0) return;
+            var value = Activator.CreateInstance(componentInfos[index - 1].Type);
+            entity.Set(value, componentInfos[index - 1].Index);
         }
     }
 }

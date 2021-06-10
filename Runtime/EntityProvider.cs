@@ -12,7 +12,7 @@ namespace Ludaludaed.KECS.Unity
         private int entityID = -1;
         
         private Entity _entity;
-        public Entity GetEntity() => _entity;
+        public ref Entity GetEntity() => ref _entity;
 
         private void Start()
         {
