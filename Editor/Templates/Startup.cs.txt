@@ -1,0 +1,12 @@
+using Ludaludaed.KECS.Unity;
+
+namespace #NS# 
+{
+	public class #SCRIPTNAME# : BaseStartup
+    {
+        public override void Bootstrap()
+        {
+			//...
+        }
+    }
+}

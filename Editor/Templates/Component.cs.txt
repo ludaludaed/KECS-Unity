@@ -1,0 +1,15 @@
+﻿using Ludaludaed.KECS.Unity;
+using UnityEngine;
+
+namespace #NS# 
+{
+	[System.Serializable]
+    public struct #SCRIPTNAME#Component
+    {
+        //...
+    }
+    
+    public class #SCRIPTNAME# : MonoProvider<#SCRIPTNAME#Component> { }
+}
+
+

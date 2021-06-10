@@ -1,0 +1,24 @@
+using Ludaludaed.KECS;
+using Ludaludaed.KECS.Unity;
+using UnityEngine;
+
+namespace #NS#
+{
+    public class #SCRIPTNAME# : SystemBase, IFixedUpdate
+    {
+        private Filter _filter;
+
+        public override void Initialize()
+        {
+			//...
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            _filter.ForEach((Entity entity) =>
+            {
+				//...
+            });
+        }
+    }
+}
