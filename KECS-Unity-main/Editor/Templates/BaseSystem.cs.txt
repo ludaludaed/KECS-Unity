@@ -1,0 +1,12 @@
+using Ludaludaed.KECS;
+
+namespace #NS#
+{
+    public class #SCRIPTNAME# : SystemBase
+    {
+        public override void Initialize()
+        {
+			//...
+        }
+    }
+}
