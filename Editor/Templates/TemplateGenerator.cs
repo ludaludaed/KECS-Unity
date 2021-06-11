@@ -30,7 +30,7 @@ namespace Ludaludaed.KECS.Unity.Editor
         {
             CreateAndRenameAsset($"{GetAssetPath()}/Component.cs",
                 EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
-                (name) => CreateTemplateInternal(GetTemplateContent(ComponentTemplate), name));
+                (name) => CreateTemplateInternal(GetTemplateContent(ComponentTemplate), name, "Provider"));
         }
 
         [MenuItem("Assets/Create/KECS/Systems/Create BaseSystem", false, -198)]
@@ -65,7 +65,7 @@ namespace Ludaludaed.KECS.Unity.Editor
                 (name) => CreateTemplateInternal(GetTemplateContent(LateUpdateSystemTemplate), name));
         }
 
-        private static string CreateTemplate(string proto, string fileName)
+        private static string CreateTemplate(string proto, string fileName, string suffix)
         {
             if (string.IsNullOrEmpty(fileName))
             {
@@ -82,7 +82,7 @@ namespace Ludaludaed.KECS.Unity.Editor
             proto = proto.Replace("#SCRIPTNAME#", Path.GetFileNameWithoutExtension(fileName));
             try
             {
-                File.WriteAllText(AssetDatabase.GenerateUniqueAssetPath(fileName), proto);
+                File.WriteAllText(AssetDatabase.GenerateUniqueAssetPath(fileName.Replace(".cs", "") + suffix + ".cs"), proto);
             }
             catch (Exception ex)
             {
@@ -93,9 +93,9 @@ namespace Ludaludaed.KECS.Unity.Editor
             return null;
         }
 
-        private static void CreateTemplateInternal(string proto, string fileName)
+        private static void CreateTemplateInternal(string proto, string fileName, string suffix = "")
         {
-            var res = CreateTemplate(proto, fileName);
+            var res = CreateTemplate(proto, fileName, suffix);
             if (res != null)
             {
                 EditorUtility.DisplayDialog(Title, res, "Close");

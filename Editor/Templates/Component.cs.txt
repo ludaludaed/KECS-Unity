@@ -5,12 +5,12 @@ namespace #NS#
 {
 	[System.Serializable]
 	[AutoRegistrationComponent]
-    public struct #SCRIPTNAME#Component : IComponent
+    public struct #SCRIPTNAME#Component
     {
         //...
     }
     
-    public class #SCRIPTNAME# : MonoProvider<#SCRIPTNAME#Component> { }
+    public class #SCRIPTNAME#Provider : MonoProvider<#SCRIPTNAME#Component> { }
 }
 
 
