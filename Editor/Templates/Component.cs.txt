@@ -4,6 +4,7 @@ using UnityEngine;
 namespace #NS# 
 {
 	[System.Serializable]
+	[AutoRegistrationComponent]
     public struct #SCRIPTNAME#Component : IComponent
     {
         //...
