@@ -89,7 +89,7 @@ namespace Ludaludaed.KECS.Unity
             var goName = "Archetype ";
             foreach (var type in archetype.Mask)
             {
-                goName += $"[{EcsTypeManager.ComponentsInfos[type].Type.Name}] ";
+                goName += $"[{EcsTypeManager.GetTypeInfo(type).Type.Name}] ";
             }
 
             go.name = goName;

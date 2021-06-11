@@ -59,8 +59,10 @@ namespace Ludaludaed.KECS.Unity.Editor
         {
             EditorGUILayout.BeginVertical(GUI.skin.box);
             DrawAddComponentMenu(_observer.Entity);
+
             var count = _observer.Entity.GetComponents(ref _componentsCache);
             _observer.Entity.GetComponentsIndexes(ref _componentsIndexes);
+
             var colors = DrawHelper.GetColoredBoxStyle(count);
             var boldText = new GUIStyle(GUI.skin.label) {fontStyle = FontStyle.Bold};
 
@@ -123,6 +125,7 @@ namespace Ludaludaed.KECS.Unity.Editor
                 {
                     if (DrawHelper.DrawField(info, component, info.SetValue)) changed = true;
                 }
+
                 if (changed) _observer.Entity.Set(component, componentIndex);
                 EditorGUI.indentLevel = indent;
             }
@@ -135,18 +138,18 @@ namespace Ludaludaed.KECS.Unity.Editor
             var componentInfos = new List<EcsTypeManager.TypeInfo>();
             var componentNames = new List<string>() {"Add"};
 
-            var arrayOfComponentsInfos = EcsTypeManager.ComponentsInfos;
+            var arrayOfComponentsInfos = EcsTypeManager.GetTypeInfos();
 
-            for (int i = 0, lenght = EcsTypeManager.ComponentTypesCount; i < lenght; i++)
+            for (int i = 0, lenght = arrayOfComponentsInfos.Length; i < lenght; i++)
             {
                 if (entity.Has(arrayOfComponentsInfos[i].Index)) continue;
                 componentInfos.Add(arrayOfComponentsInfos[i]);
                 componentNames.Add(arrayOfComponentsInfos[i].Type.Name);
             }
+
             var index = EditorGUILayout.Popup(0, componentNames.ToArray());
-            if (index <= 0) return;
-            var value = Activator.CreateInstance(componentInfos[index - 1].Type);
-            entity.Set(value, componentInfos[index - 1].Index);
+            if (index == 0) return;
+            entity.Set(Activator.CreateInstance(componentInfos[index - 1].Type), componentInfos[index - 1].Index);
         }
     }
 }
