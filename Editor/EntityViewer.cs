@@ -108,7 +108,7 @@ namespace Ludaludaed.KECS.Unity.Editor
 
             if (GUILayout.Button("✘", GUILayout.Width(19), GUILayout.Height(19)))
             {
-                _observer.Entity.Remove(componentIndex);
+                _observer.Entity.RemoveExecute(type);
                 return;
             }
 
@@ -126,7 +126,7 @@ namespace Ludaludaed.KECS.Unity.Editor
                     if (DrawHelper.DrawField(info, component, info.SetValue)) changed = true;
                 }
 
-                if (changed) _observer.Entity.Set(component, componentIndex);
+                if (changed) _observer.Entity.SetExecute(component);
                 EditorGUI.indentLevel = indent;
             }
 
@@ -135,21 +135,21 @@ namespace Ludaludaed.KECS.Unity.Editor
 
         private static void DrawAddComponentMenu(in Entity entity)
         {
-            var componentInfos = new List<EcsTypeManager.TypeInfo>();
+            var componentInfos = new List<Type>();
             var componentNames = new List<string>() {"Add"};
 
-            var arrayOfComponentsInfos = EcsTypeManager.GetTypeInfos();
+            var arrayOfComponentsInfos = EcsTypeManager.GetAllTypes();
 
             for (int i = 0, lenght = arrayOfComponentsInfos.Length; i < lenght; i++)
             {
-                if (entity.Has(arrayOfComponentsInfos[i].Index)) continue;
+                if (entity.HasExecute(arrayOfComponentsInfos[i])) continue;
                 componentInfos.Add(arrayOfComponentsInfos[i]);
-                componentNames.Add(arrayOfComponentsInfos[i].Type.Name);
+                componentNames.Add(arrayOfComponentsInfos[i].Name);
             }
 
             var index = EditorGUILayout.Popup(0, componentNames.ToArray());
             if (index == 0) return;
-            entity.Set(Activator.CreateInstance(componentInfos[index - 1].Type), componentInfos[index - 1].Index);
+            entity.SetExecute(Activator.CreateInstance(componentInfos[index - 1]));
         }
     }
 }
