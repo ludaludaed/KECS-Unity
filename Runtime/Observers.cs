@@ -54,7 +54,7 @@ namespace Ludaludaed.KECS.Unity
                 go.transform.SetParent(_entitiesGO, false);
                 var unityEntity = go.AddComponent<EntityObserver>();
                 unityEntity.Entity = entity;
-                go.name = entity.ToString();
+                go.name = entity.IsAlive() ? $"Entity {entity.Id} {entity.Age}" : "Destroyed Entity";
                 go.SetActive(true);
                 EntityGameObjects.Set(entity.Id, go);
             }
@@ -62,7 +62,7 @@ namespace Ludaludaed.KECS.Unity
             {
                 ref var go = ref EntityGameObjects.Get(entity.Id);
                 go.GetComponent<EntityObserver>().Entity = entity;
-                go.name = entity.ToString();
+                go.name = entity.IsAlive() ? $"Entity {entity.Id} {entity.Age}" : "Destroyed Entity";
                 go.SetActive(true);
             }
         }
@@ -72,7 +72,7 @@ namespace Ludaludaed.KECS.Unity
             if (_isDestroyed) return;
             if (!EntityGameObjects.Contains(entity.Id)) return;
             var go = EntityGameObjects.Get(entity.Id);
-            go.name = entity.ToString();
+            go.name = entity.IsAlive() ? $"Entity {entity.Id} {entity.Age}" : "Destroyed Entity";
             go.SetActive(false);
         }
 
