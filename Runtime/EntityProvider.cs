@@ -16,9 +16,25 @@ namespace Ludaludaed.KECS.Unity
 
         private void Start()
         {
+            if(_world != null) return;
             _world = Worlds.Get(gameObject.scene.name);
             var entity = _world.CreateEntity();
             entity.SetEvent(new InstantiateEvent() {GameObject = gameObject});
+        }
+
+        private void OnEnable()
+        {
+            if(_world == null || !_world.IsAlive()) return;
+            var entity = _world.CreateEntity();
+            entity.SetEvent(new InstantiateEvent() {GameObject = gameObject});
+        }
+
+        private void OnDisable()
+        {
+            if(_world == null || !_world.IsAlive()) return;
+            if(!_entity.IsAlive()) return;
+            _entity.Destroy();
+            entityID = -1;
         }
 
         public ref Entity GetEntity() => ref _entity;

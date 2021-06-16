@@ -12,7 +12,6 @@ namespace Ludaludaed.KECS.Unity
             {
                 entity.Set(serializedData);
             }
-            Destroy(this);
         }
     }
 

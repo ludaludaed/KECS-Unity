@@ -19,11 +19,15 @@ namespace Ludaludaed.KECS.Unity
                 {
                     var gameObject = instantiate.GameObject;
                     var provider = gameObject.GetComponent<EntityProvider>();
+                    if (provider == null) return;
                     var newEntity = _world.CreateEntity();
-
                     provider.SetEntity(newEntity);
                     newEntity.Set(new ViewComponent()
-                        {GameObject = gameObject, Transform = gameObject.transform, Provider = provider});
+                    {
+                        GameObject = gameObject, 
+                        Transform = gameObject.transform, 
+                        Provider = provider
+                    });
                     foreach (var component in gameObject.GetComponents<BaseMonoProvider>())
                     {
                         component.SetComponentToEntity(newEntity);

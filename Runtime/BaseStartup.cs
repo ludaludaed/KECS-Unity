@@ -14,18 +14,19 @@ namespace Ludaludaed.KECS.Unity
 #endif
         private string worldName;
 
-        [Header("World configuration")] public int cacheEntitiesCapacity;
-        public int cacheArchetypesCapacity;
-        public int cacheComponentsCapacity;
+        [Header("World configuration")] 
+        public int EntitiesCapacity;
+        public int ArchetypesCapacity;
+        public int ComponentsCapacity;
 
         public void Awake()
         {
             worldName = gameObject.scene.name;
             World = Worlds.Create(worldName, new WorldConfig()
                 {
-                    Entities = cacheEntitiesCapacity,
-                    Archetypes = cacheArchetypesCapacity,
-                    Components = cacheComponentsCapacity,
+                    Entities = EntitiesCapacity,
+                    Archetypes = ArchetypesCapacity,
+                    Components = ComponentsCapacity,
                 });
 
 
