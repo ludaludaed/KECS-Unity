@@ -8,22 +8,22 @@ namespace Ludaludaed.KECS.Unity
 
         public override void Initialize()
         {
-            _filter = _world.Filter().With<InstantiateEventComponent>();
+            _filter = _world.Filter().With<InstantiateEvent>();
         }
 
         public void OnUpdate(float deltaTime)
         {
-            _filter.ForEach((Entity entity, ref InstantiateEventComponent instantiate) =>
+            _filter.ForEach((Entity entity, ref InstantiateEvent instantiate) =>
             {
-                if (instantiate.GO != null)
+                if (instantiate.GameObject != null)
                 {
-                    var gameObject = instantiate.GO;
+                    var gameObject = instantiate.GameObject;
                     var provider = gameObject.GetComponent<EntityProvider>();
                     var newEntity = _world.CreateEntity();
 
                     provider.SetEntity(newEntity);
-                    newEntity.Set(new GameObjectComponent()
-                        {GameObject = gameObject, Transform = gameObject.transform, Entity = provider});
+                    newEntity.Set(new ViewComponent()
+                        {GameObject = gameObject, Transform = gameObject.transform, Provider = provider});
                     foreach (var component in gameObject.GetComponents<BaseMonoProvider>())
                     {
                         component.SetComponentToEntity(newEntity);

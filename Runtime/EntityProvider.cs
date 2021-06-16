@@ -12,15 +12,17 @@ namespace Ludaludaed.KECS.Unity
         private int entityID = -1;
         
         private Entity _entity;
-        public ref Entity GetEntity() => ref _entity;
+        private World _world;
 
         private void Start()
         {
-            var world = Worlds.Get(gameObject.scene.name);
-            var entity = world.CreateEntity();
-            entity.SetEvent(new InstantiateEventComponent() {GO = gameObject});
+            _world = Worlds.Get(gameObject.scene.name);
+            var entity = _world.CreateEntity();
+            entity.SetEvent(new InstantiateEvent() {GameObject = gameObject});
         }
 
+        public ref Entity GetEntity() => ref _entity;
+        
         public void SetEntity(Entity entity)
         {
             _entity = entity;
@@ -28,15 +30,15 @@ namespace Ludaludaed.KECS.Unity
         }
     }
 
-    public struct InstantiateEventComponent
+    public struct InstantiateEvent
     {
-        public GameObject GO;
+        public GameObject GameObject;
     }
 
-    public struct GameObjectComponent
+    public struct ViewComponent
     {
         public GameObject GameObject;
         public Transform Transform;
-        public EntityProvider Entity;
+        public EntityProvider Provider;
     }
 }
