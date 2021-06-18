@@ -6,7 +6,7 @@ namespace Ludaludaed.KECS.Unity
     {
         [SerializeField] protected T serializedData;
 
-        public override void SetComponentToEntity(Entity entity)
+        public override void SetComponentToEntity(in Entity entity)
         {
             if (entity.IsAlive())
             {
@@ -18,6 +18,6 @@ namespace Ludaludaed.KECS.Unity
     [RequireComponent(typeof(EntityProvider))]
     public abstract class BaseMonoProvider : MonoBehaviour
     {
-        public abstract void SetComponentToEntity(Entity entity);
+        public abstract void SetComponentToEntity(in Entity entity);
     }
 }

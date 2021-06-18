@@ -10,6 +10,7 @@ namespace Ludaludaed.KECS.Unity
         [ReadOnly]
 #endif
         private int entityID = -1;
+        public bool InjectAndDestroy = false;
         
         private Entity _entity;
         private World _world;
@@ -18,15 +19,17 @@ namespace Ludaludaed.KECS.Unity
         {
             if(_world != null) return;
             _world = Worlds.Get(gameObject.scene.name);
-            var entity = _world.CreateEntity();
-            entity.SetEvent(new InstantiateEvent() {GameObject = gameObject});
+            _entity = _world.CreateEntity();
+            _entity.Set(new InstantiateComponent() {GameObject = gameObject});
+            entityID = _entity.Id;
         }
 
         private void OnEnable()
         {
             if(_world == null || !_world.IsAlive()) return;
-            var entity = _world.CreateEntity();
-            entity.SetEvent(new InstantiateEvent() {GameObject = gameObject});
+            _entity = _world.CreateEntity();
+            _entity.Set(new InstantiateComponent() {GameObject = gameObject});
+            entityID = _entity.Id;
         }
 
         private void OnDisable()
@@ -38,15 +41,9 @@ namespace Ludaludaed.KECS.Unity
         }
 
         public ref Entity GetEntity() => ref _entity;
-        
-        public void SetEntity(Entity entity)
-        {
-            _entity = entity;
-            entityID = entity.Id;
-        }
     }
 
-    public struct InstantiateEvent
+    public struct InstantiateComponent
     {
         public GameObject GameObject;
     }
