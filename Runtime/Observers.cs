@@ -22,7 +22,7 @@ namespace Ludaludaed.KECS.Unity
                 throw new Exception("World is null and cannot be observable");
             }
 
-            var gameObj = new GameObject($"[WORLD] {world.Name}");
+            var gameObj = new GameObject($"[WORLD] Name: {world.Name} Id: {world.Id}");
             DontDestroyOnLoad(gameObj);
 
             var observer = gameObj.AddComponent<WorldObserver>();
