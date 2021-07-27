@@ -20,20 +20,7 @@ namespace Ludaludaed.KECS.Unity
                     var gameObject = instantiate.GameObject;
                     var provider = gameObject.GetComponent<EntityProvider>();
                     if (provider == null) return;
-                    
-                    entity.Set(new ViewComponent()
-                    {
-                        GameObject = gameObject, 
-                        Transform = gameObject.transform, 
-                        Provider = provider
-                    });
-
-                    entity.Remove<InstantiateComponent>();
-                    foreach (var component in gameObject.GetComponents<BaseMonoProvider>())
-                    {
-                        component.SetComponentToEntity(entity);
-                        if(provider.InjectAndDestroy) Object.Destroy(component);
-                    }
+                    provider.Build();
                 }
             });
         }

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Ludaludaed.KECS.Unity
@@ -10,26 +9,24 @@ namespace Ludaludaed.KECS.Unity
         [ReadOnly]
 #endif
         private int entityID = -1;
-        public bool InjectAndDestroy = false;
-        
+
         private Entity _entity;
         private World _world;
+        private EntityBuilder _builder;
 
         private void Start()
         {
             if(_world != null) return;
             _world = Worlds.Get(gameObject.scene.name);
-            _entity = _world.CreateEntity();
-            _entity.Set(new InstantiateComponent() {GameObject = gameObject});
-            entityID = _entity.Id;
+            var entity = _world.CreateEntity();
+            entity.SetEvent(new InstantiateComponent() {GameObject = gameObject});
         }
 
         private void OnEnable()
         {
             if(_world == null || !_world.IsAlive()) return;
-            _entity = _world.CreateEntity();
-            _entity.Set(new InstantiateComponent() {GameObject = gameObject});
-            entityID = _entity.Id;
+            var entity = _world.CreateEntity();
+            entity.SetEvent(new InstantiateComponent() {GameObject = gameObject});
         }
 
         private void OnDisable()
@@ -38,6 +35,29 @@ namespace Ludaludaed.KECS.Unity
             if(!_entity.IsAlive()) return;
             _entity.Destroy();
             entityID = -1;
+        }
+
+        public void Build()
+        {
+            if(_entity.IsAlive()) _entity.Destroy();
+            if (_builder == null)
+            {
+                _builder = new EntityBuilder();
+                    
+                foreach (var component in gameObject.GetComponents<BaseMonoProvider>())
+                {
+                    component.SetComponentToEntity(_builder);
+                    Object.Destroy(component);
+                }
+                    
+                _builder.Append(new ViewComponent()
+                {
+                    GameObject = gameObject, 
+                    Transform = gameObject.transform, 
+                    Provider = this
+                });
+            }
+            _entity = _builder.Build(_world);
         }
 
         public ref Entity GetEntity() => ref _entity;

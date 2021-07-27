@@ -6,18 +6,15 @@ namespace Ludaludaed.KECS.Unity
     {
         [SerializeField] protected T serializedData;
 
-        public override void SetComponentToEntity(in Entity entity)
+        public override void SetComponentToEntity(EntityBuilder entityBuilder)
         {
-            if (entity.IsAlive())
-            {
-                entity.Set(serializedData);
-            }
+            entityBuilder.Append(serializedData);
         }
     }
 
     [RequireComponent(typeof(EntityProvider))]
     public abstract class BaseMonoProvider : MonoBehaviour
     {
-        public abstract void SetComponentToEntity(in Entity entity);
+        public abstract void SetComponentToEntity(EntityBuilder entityBuilder);
     }
 }
