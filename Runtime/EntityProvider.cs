@@ -58,6 +58,7 @@ namespace Ludaludaed.KECS.Unity
                 });
             }
             _entity = _builder.Build(_world);
+            entityID = _entity.Id;
         }
 
         public ref Entity GetEntity() => ref _entity;
