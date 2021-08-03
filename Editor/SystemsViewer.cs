@@ -20,7 +20,7 @@ namespace Ludaludaed.KECS.Unity.Editor
             _observer = null;
         }
 
-        private static void SystemDraw(GrowList<Systems.SystemData> data)
+        private static void SystemDraw(FastList<Systems.SystemData> data)
         {
             EditorGUI.indentLevel++;
             var colors = DrawHelper.GetColoredBoxStyle(data.Count);
