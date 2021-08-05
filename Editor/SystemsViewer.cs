@@ -20,7 +20,7 @@ namespace Ludaludaed.KECS.Unity.Editor
             _observer = null;
         }
 
-        private static void SystemDraw(FastList<Systems.SystemData> data)
+        private static void SystemDraw(FastList<SystemGroup.SystemData> data)
         {
             EditorGUI.indentLevel++;
             var colors = DrawHelper.GetColoredBoxStyle(data.Count);
@@ -40,27 +40,21 @@ namespace Ludaludaed.KECS.Unity.Editor
             var savedState = GUI.enabled;
             GUI.enabled = true;
             var systemsGroup = _observer.GetSystems();
+            if(systemsGroup == null) return;
 
-            GUILayout.BeginVertical(GUI.skin.box);
-            EditorGUILayout.LabelField("Base systems", EditorStyles.boldLabel);
-            SystemDraw(systemsGroup.GetOnlyBaseSystems());
-            GUILayout.EndVertical();
-
-            GUILayout.BeginVertical(GUI.skin.box);
-            EditorGUILayout.LabelField("Update systems", EditorStyles.boldLabel);
-            SystemDraw(systemsGroup.GetUpdateSystems());
-            GUILayout.EndVertical();
-
-            GUILayout.BeginVertical(GUI.skin.box);
-            EditorGUILayout.LabelField("FixedUpdate systems", EditorStyles.boldLabel);
-            SystemDraw(systemsGroup.GetFixedUpdateSystems());
-            GUILayout.EndVertical();
-
-            GUILayout.BeginVertical(GUI.skin.box);
-            EditorGUILayout.LabelField("LateUpdate systems", EditorStyles.boldLabel);
-            SystemDraw(systemsGroup.GetLateUpdateSystems());
-            GUILayout.EndVertical();
-
+            foreach (var group in systemsGroup)
+            {
+                GUILayout.BeginVertical(GUI.skin.box);
+                EditorGUILayout.LabelField(group.Name, EditorStyles.boldLabel);
+                
+                var update = group.GetUpdateSystems();
+                if (update.Count != 0)
+                {
+                    SystemDraw(group.GetUpdateSystems());
+                }
+                GUILayout.EndVertical();
+            }
+            
             GUI.enabled = savedState;
         }
     }

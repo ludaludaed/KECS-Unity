@@ -18,15 +18,13 @@ namespace Ludaludaed.KECS.Unity
         {
             if(_world != null) return;
             _world = Worlds.Get(gameObject.scene.name);
-            var entity = _world.CreateEntity();
-            entity.SetEvent(new InstantiateComponent() {GameObject = gameObject});
+            Build();
         }
 
         private void OnEnable()
         {
             if(_world == null || !_world.IsAlive()) return;
-            var entity = _world.CreateEntity();
-            entity.SetEvent(new InstantiateComponent() {GameObject = gameObject});
+            Build();
         }
 
         private void OnDisable()
@@ -62,11 +60,6 @@ namespace Ludaludaed.KECS.Unity
         }
 
         public ref Entity GetEntity() => ref _entity;
-    }
-
-    public struct InstantiateComponent
-    {
-        public GameObject GameObject;
     }
 
     public struct ViewComponent

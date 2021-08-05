@@ -34,17 +34,10 @@ namespace Ludaludaed.KECS.Unity.Editor
         {
             var bgColor = GUI.backgroundColor;
             GUI.backgroundColor = Color.red;
-            if (entity.IsEmpty() || !entity.IsAlive())
-            {
-                GUI.backgroundColor = Color.grey;
-            }
-
+            if (entity.IsEmpty() || !entity.IsAlive()) GUI.backgroundColor = Color.grey;
             if (GUILayout.Button("Destroy Entity"))
             {
-                if (!entity.IsEmpty() && entity.IsAlive())
-                {
-                    entity.Destroy();
-                }
+                if (!entity.IsEmpty() && entity.IsAlive()) entity.Destroy();
             }
 
             GUI.backgroundColor = bgColor;

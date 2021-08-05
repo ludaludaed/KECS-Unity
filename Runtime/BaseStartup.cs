@@ -6,7 +6,9 @@ namespace Ludaludaed.KECS.Unity
     public abstract class BaseStartup : MonoBehaviour
     {
         public World World;
-        public Systems Systems;
+        public SystemGroup UpdateSystems;
+        public SystemGroup FixedUpdateSystems;
+        public SystemGroup LateUpdateSystems;
 
         [SerializeField]
 #if UNITY_EDITOR
@@ -14,8 +16,7 @@ namespace Ludaludaed.KECS.Unity
 #endif
         private string worldName;
 
-        [Header("World configuration")] 
-        public int EntitiesCapacity;
+        [Header("World configuration")] public int EntitiesCapacity;
         public int ArchetypesCapacity;
         public int ComponentsCapacity;
 
@@ -23,24 +24,30 @@ namespace Ludaludaed.KECS.Unity
         {
             worldName = gameObject.scene.name;
             World = Worlds.Create(worldName, new WorldConfig()
-                {
-                    Entities = EntitiesCapacity,
-                    Archetypes = ArchetypesCapacity,
-                    Components = ComponentsCapacity,
-                });
+            {
+                Entities = EntitiesCapacity,
+                Archetypes = ArchetypesCapacity,
+                Components = ComponentsCapacity,
+            });
 
 
-            Systems = new Systems(World);
-            Systems.Add<UnityConversionSystem>();
+            UpdateSystems = new SystemGroup(World, "Update");
+            FixedUpdateSystems = new SystemGroup(World, "Fixed Update");
+            LateUpdateSystems = new SystemGroup(World, "Late Update");
 
 #if UNITY_EDITOR && DEBUG
-            var worldGO = WorldObserver.Create(World);
-            SystemsObserver.Create(Systems, worldGO.transform);
+            WorldObserver.Create(World);
+            SystemsObserver.Create()
+                .Add(UpdateSystems)
+                .Add(FixedUpdateSystems)
+                .Add(LateUpdateSystems);
 #endif
 
             Bootstrap();
 
-            Systems.Initialize();
+            UpdateSystems.Initialize();
+            FixedUpdateSystems.Initialize();
+            LateUpdateSystems.Initialize();
         }
 
         public abstract void Bootstrap();
@@ -48,22 +55,24 @@ namespace Ludaludaed.KECS.Unity
         public void Update()
         {
             World.ExecuteTasks();
-            Systems.Update(Time.deltaTime);
+            UpdateSystems.Update(Time.deltaTime);
         }
 
         public void FixedUpdate()
         {
-            Systems.FixedUpdate(Time.fixedDeltaTime);
+            FixedUpdateSystems.Update(Time.deltaTime);
         }
 
         public void LateUpdate()
         {
-            Systems.LateUpdate(Time.deltaTime);
+            LateUpdateSystems.Update(Time.deltaTime);
         }
 
         public void OnDestroy()
         {
-            Systems.Destroy();
+            UpdateSystems.Destroy();
+            FixedUpdateSystems.Destroy();
+            LateUpdateSystems.Destroy();
             World.Destroy();
         }
     }

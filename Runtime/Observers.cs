@@ -22,7 +22,7 @@ namespace Ludaludaed.KECS.Unity
                 throw new Exception("World is null and cannot be observable");
             }
 
-            var gameObj = new GameObject($"[WORLD] Name: {world.Name} Id: {world.Id}");
+            var gameObj = new GameObject($"[WORLD] Name: {world.Name}");
             DontDestroyOnLoad(gameObj);
 
             var observer = gameObj.AddComponent<WorldObserver>();
@@ -111,30 +111,30 @@ namespace Ludaludaed.KECS.Unity
 
     public sealed class SystemsObserver : MonoBehaviour, ISystemsDebugListener
     {
-        private Systems _systems;
+        private FastList<SystemGroup> _systems;
 
-        public static GameObject Create(Systems systems, Transform worldParent)
+        public static SystemsObserver Create()
         {
-            if (systems == null)
-            {
-                throw new ArgumentNullException(nameof(systems));
-            }
-
-            var go = new GameObject( $"[SYSTEMS] {systems.Name}");
+            var go = new GameObject( "[SYSTEMS]");
             DontDestroyOnLoad(go);
-            go.transform.SetParent(worldParent);
             var observer = go.AddComponent<SystemsObserver>();
-            observer._systems = systems;
-            systems.AddDebugListener(observer);
-            return go;
+            observer._systems = new FastList<SystemGroup>();
+            return observer;
         }
 
-        public Systems GetSystems()
+
+        public SystemsObserver Add(SystemGroup systemGroup)
         {
-            return _systems;
+            _systems.Add(systemGroup);
+            systemGroup.AddDebugListener(this);
+            return this;
         }
+        
 
-        public void OnSystemsDestroyed(Systems systems)
+        public FastList<SystemGroup> GetSystems() => _systems;
+        
+        
+        public void OnSystemsDestroyed(SystemGroup systemGroup)
         {
             OnDestroy();
             Destroy(gameObject);
@@ -143,7 +143,10 @@ namespace Ludaludaed.KECS.Unity
         public void OnDestroy()
         {
             if (_systems == null) return;
-            _systems.RemoveDebugListener(this);
+            foreach (var system in _systems)
+            {
+                system.RemoveDebugListener(this);
+            }
             _systems = null;
         }
     }
