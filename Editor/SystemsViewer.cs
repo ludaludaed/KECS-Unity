@@ -20,16 +20,17 @@ namespace Ludaludaed.KECS.Unity.Editor
             _observer = null;
         }
 
-        private static void SystemDraw(FastList<SystemGroup.SystemData> data)
+        private static void SystemDraw(SystemGroup group)
         {
             EditorGUI.indentLevel++;
+            var data = group.GetSystems();
             var colors = DrawHelper.GetColoredBoxStyle(data.Count);
             for (int i = 0, lenght = data.Count; i < lenght; i++)
             {
                 GUILayout.BeginVertical(colors[i]);
                 var runItem = data.Get(i);
-                var type = runItem.Base.GetType();
-                runItem.IsEnable = EditorGUILayout.ToggleLeft(type.Name, runItem.IsEnable);
+                var type = runItem.GetType();
+                group.SetActive(i,EditorGUILayout.ToggleLeft(type.Name, group.GetActive(i)));
                 GUILayout.EndVertical();
             }
             EditorGUI.indentLevel--;
@@ -46,12 +47,7 @@ namespace Ludaludaed.KECS.Unity.Editor
             {
                 GUILayout.BeginVertical(GUI.skin.box);
                 EditorGUILayout.LabelField(group.Name, EditorStyles.boldLabel);
-                
-                var update = group.GetUpdateSystems();
-                if (update.Count != 0)
-                {
-                    SystemDraw(group.GetUpdateSystems());
-                }
+                SystemDraw(group);
                 GUILayout.EndVertical();
             }
             
