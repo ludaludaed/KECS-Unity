@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace #NS#
 {
-    public class #SCRIPTNAME# : SystemBase, IUpdate
+    public class #SCRIPTNAME# : UpdateSystem
     {
         private Filter _filter;
 
@@ -13,7 +13,7 @@ namespace #NS#
 			//...
         }
 
-        public void OnUpdate(float deltaTime)
+        public override void OnUpdate(float deltaTime)
         {
             _filter.ForEach((Entity entity) =>
             {
