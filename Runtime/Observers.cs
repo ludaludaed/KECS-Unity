@@ -22,7 +22,7 @@ namespace Ludaludaed.KECS.Unity
                 throw new Exception("World is null and cannot be observable");
             }
 
-            var gameObj = new GameObject($"[WORLD] Name: {world.Name}");
+            var gameObj = new GameObject($"|KECS| [WORLD] Name: {world.Name}");
             DontDestroyOnLoad(gameObj);
 
             var observer = gameObj.AddComponent<WorldObserver>();
@@ -115,7 +115,7 @@ namespace Ludaludaed.KECS.Unity
 
         public static SystemsObserver Create()
         {
-            var go = new GameObject( "[SYSTEMS]");
+            var go = new GameObject( "|KECS| [SYSTEMS]");
             DontDestroyOnLoad(go);
             var observer = go.AddComponent<SystemsObserver>();
             observer._systems = new FastList<SystemGroup>();
