@@ -51,8 +51,7 @@ namespace Ludaludaed.KECS.Unity
                 _builder.Append(new ViewComponent()
                 {
                     GameObject = gameObject, 
-                    Transform = gameObject.transform, 
-                    Provider = this
+                    Transform = gameObject.transform
                 });
             }
             _entity = _builder.Build(_world);
@@ -66,6 +65,5 @@ namespace Ludaludaed.KECS.Unity
     {
         public GameObject GameObject;
         public Transform Transform;
-        public EntityProvider Provider;
     }
 }

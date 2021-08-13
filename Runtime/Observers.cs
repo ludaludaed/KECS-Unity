@@ -87,7 +87,7 @@ namespace Ludaludaed.KECS.Unity
             observer.Archetype = archetype;
 
             var goName = "Archetype ";
-            foreach (var typeIdx in archetype.Mask)
+            foreach (var typeIdx in archetype.Signature)
             {
                 goName += $"[{EcsTypeManager.GetTypeByIndex(typeIdx).Name}] ";
             }

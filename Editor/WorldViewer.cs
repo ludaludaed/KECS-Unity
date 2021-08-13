@@ -10,18 +10,17 @@ namespace Ludaludaed.KECS.Unity.Editor
         public override void OnInspectorGUI()
         {
             var observer = (WorldObserver) target;
-            var worldInfo = observer.GetInfo();
             GUILayout.BeginVertical(GUI.skin.box);
-            EditorGUILayout.LabelField("Components: ", worldInfo.ComponentsCount.ToString());
+            EditorGUILayout.LabelField("Components: ", observer.GetInfo().ComponentsCount.ToString());
             GUILayout.EndVertical();
             GUILayout.BeginVertical(GUI.skin.box);
-            EditorGUILayout.LabelField("Archetypes: ", worldInfo.ArchetypesCount.ToString());
+            EditorGUILayout.LabelField("Archetypes: ", observer.GetInfo().ArchetypesCount.ToString());
             GUILayout.EndVertical();
             GUILayout.BeginVertical(GUI.skin.box);
-            EditorGUILayout.LabelField("Active entities: ", worldInfo.EntitiesCount.ToString());
+            EditorGUILayout.LabelField("Active entities: ", observer.GetInfo().EntitiesCount.ToString());
             GUILayout.EndVertical();
             GUILayout.BeginVertical(GUI.skin.box);
-            EditorGUILayout.LabelField("Reserved entities: ", worldInfo.FreeEntitiesCount.ToString());
+            EditorGUILayout.LabelField("Reserved entities: ", observer.GetInfo().FreeEntitiesCount.ToString());
             GUILayout.EndVertical();
         }
     }

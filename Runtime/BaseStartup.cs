@@ -16,9 +16,11 @@ namespace Ludaludaed.KECS.Unity
 #endif
         private string worldName;
 
-        [Header("World configuration")] public int EntitiesCapacity;
-        public int ArchetypesCapacity;
-        public int ComponentsCapacity;
+        [Header("World configuration")] 
+        public int EntitiesCapacity = WorldConfig.DefaultEntities;
+        public int ArchetypesCapacity = WorldConfig.DefaultArchetypes;
+        public int ComponentsCapacity = WorldConfig.DefaultComponents;
+        public int QueriesCapacity = WorldConfig.DefaultQueries;
 
         public void Awake()
         {
@@ -28,6 +30,7 @@ namespace Ludaludaed.KECS.Unity
                 Entities = EntitiesCapacity,
                 Archetypes = ArchetypesCapacity,
                 Components = ComponentsCapacity,
+                Queries = QueriesCapacity
             });
 
 
