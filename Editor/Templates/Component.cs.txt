@@ -7,7 +7,7 @@ namespace #NS#
 	[AutoRegistrationComponent]
     public struct #SCRIPTNAME#Component
     {
-        //...
+        
     }
     
     public class #SCRIPTNAME#Provider : MonoProvider<#SCRIPTNAME#Component> { }
