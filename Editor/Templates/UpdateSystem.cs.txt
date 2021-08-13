@@ -6,19 +6,13 @@ namespace #NS#
 {
     public class #SCRIPTNAME# : UpdateSystem
     {
-        private Filter _filter;
-
-        public override void Initialize()
-        {
-			//...
-        }
-
         public override void OnUpdate(float deltaTime)
         {
-            _filter.ForEach((Entity entity) =>
-            {
-				//...
-            });
+            _world.CreateQuery()
+                .ForEach((Entity entity) =>
+                {
+				    //...
+                });
         }
     }
 }
