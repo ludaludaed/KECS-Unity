@@ -45,13 +45,13 @@ namespace Ludaludaed.KECS.Unity
                 foreach (var component in gameObject.GetComponents<BaseMonoProvider>())
                 {
                     component.SetComponentToEntity(_builder);
-                    Object.Destroy(component);
+                    Destroy(component);
                 }
                     
                 _builder.Append(new ViewComponent()
                 {
                     GameObject = gameObject, 
-                    Transform = gameObject.transform
+                    Transform = transform
                 });
             }
             _entity = _builder.Build(_world);
