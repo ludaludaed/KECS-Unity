@@ -66,17 +66,17 @@ namespace Ludaludaed.KECS.Unity
             go.name = $"[{entity.Id:D4}] Entity";
             go.SetActive(true);
         }
+        
 
-        private void Update()
+        public void OnEntityChanged(in Entity entity)
         {
             if(!_world.IsAlive()) return;
-            _world.CreateQuery().
-                ForEach((Entity entity, ref ViewComponent view) =>
-                {
-                    var debugGO = EntityGameObjects.Get(entity.Id);
-                    debugGO.name = $"[{entity.Id:D4}] {view.GameObject.name}";
-                });
+            if(!entity.Has<ViewComponent>()) return;
+            ref var view = ref entity.Get<ViewComponent>();
+            var debugGO = EntityGameObjects.Get(entity.Id);
+            debugGO.name = $"[{entity.Id:D4}] {view.GameObject.name}";
         }
+        
 
         public void OnEntityDestroyed(in Entity entity)
         {

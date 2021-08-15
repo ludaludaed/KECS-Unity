@@ -51,7 +51,7 @@ namespace Ludaludaed.KECS.Unity
                 _builder.Append(new ViewComponent()
                 {
                     GameObject = gameObject, 
-                    Transform = transform
+                    Transform = transform,
                 });
             }
             _entity = _builder.Build(_world);
