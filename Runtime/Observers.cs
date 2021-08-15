@@ -71,9 +71,13 @@ namespace Ludaludaed.KECS.Unity
         public void OnEntityChanged(in Entity entity)
         {
             if(!_world.IsAlive()) return;
-            if(!entity.Has<ViewComponent>()) return;
-            ref var view = ref entity.Get<ViewComponent>();
             var debugGO = EntityGameObjects.Get(entity.Id);
+            if(!entity.Has<ViewComponent>())
+            {
+                debugGO.name = $"[{entity.Id:D4}] Entity";
+                return;
+            }
+            ref var view = ref entity.Get<ViewComponent>();
             debugGO.name = $"[{entity.Id:D4}] {view.GameObject.name}";
         }
         
