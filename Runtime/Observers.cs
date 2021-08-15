@@ -48,23 +48,34 @@ namespace Ludaludaed.KECS.Unity
         public void OnEntityCreated(in Entity entity)
         {
             if (_isDestroyed) return;
+            GameObject go;
             if (!EntityGameObjects.Contains(entity.Id))
             {
-                var go = new GameObject();
+                go = new GameObject();
                 go.transform.SetParent(_entitiesGO, false);
                 var unityEntity = go.AddComponent<EntityObserver>();
                 unityEntity.Entity = entity;
-                go.name = entity.IsAlive() ? $"Entity {entity.Id} {entity.Age}" : "Destroyed Entity";
-                go.SetActive(true);
                 EntityGameObjects.Set(entity.Id, go);
             }
             else
             {
-                ref var go = ref EntityGameObjects.Get(entity.Id);
+                go = EntityGameObjects.Get(entity.Id);
                 go.GetComponent<EntityObserver>().Entity = entity;
-                go.name = entity.IsAlive() ? $"Entity {entity.Id} {entity.Age}" : "Destroyed Entity";
-                go.SetActive(true);
             }
+            
+            go.name = $"[{entity.Id:D4}] Entity";
+            go.SetActive(true);
+        }
+
+        private void Update()
+        {
+            if(!_world.IsAlive()) return;
+            _world.CreateQuery().
+                ForEach((Entity entity, ref ViewComponent view) =>
+                {
+                    var debugGO = EntityGameObjects.Get(entity.Id);
+                    debugGO.name = $"[{entity.Id:D4}] {view.GameObject.name}";
+                });
         }
 
         public void OnEntityDestroyed(in Entity entity)
@@ -72,7 +83,7 @@ namespace Ludaludaed.KECS.Unity
             if (_isDestroyed) return;
             if (!EntityGameObjects.Contains(entity.Id)) return;
             var go = EntityGameObjects.Get(entity.Id);
-            go.name = entity.IsAlive() ? $"Entity {entity.Id} {entity.Age}" : "Destroyed Entity";
+            go.name = "Destroyed Entity";
             go.SetActive(false);
         }
 
@@ -115,7 +126,7 @@ namespace Ludaludaed.KECS.Unity
 
         public static SystemsObserver Create()
         {
-            var go = new GameObject( "|KECS| [SYSTEMS]");
+            var go = new GameObject("|KECS| [SYSTEMS]");
             DontDestroyOnLoad(go);
             var observer = go.AddComponent<SystemsObserver>();
             observer._systems = new FastList<SystemGroup>();
@@ -129,11 +140,11 @@ namespace Ludaludaed.KECS.Unity
             systemGroup.AddDebugListener(this);
             return this;
         }
-        
+
 
         public FastList<SystemGroup> GetSystems() => _systems;
-        
-        
+
+
         public void OnSystemsDestroyed(SystemGroup systemGroup)
         {
             OnDestroy();
@@ -147,6 +158,7 @@ namespace Ludaludaed.KECS.Unity
             {
                 system.RemoveDebugListener(this);
             }
+
             _systems = null;
         }
     }
