@@ -15,7 +15,6 @@ namespace Ludaludaed.KECS.Unity.Editor
 
         private EntityObserver _observer;
 
-
         public override void OnInspectorGUI()
         {
             if (targets.Length == 1)
