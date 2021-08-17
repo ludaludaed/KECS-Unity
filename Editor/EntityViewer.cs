@@ -91,8 +91,8 @@ namespace Ludaludaed.KECS.Unity.Editor
             GUILayout.Space(15);
             if (memberInfos.Length > 0)
             {
-                _observer.unfoldedComponents[componentIndex] = !EditorGUILayout.Foldout(
-                    !_observer.unfoldedComponents[componentIndex], type.Name, true, boldFoldout);
+                _observer.unfoldedComponents[componentIndex] = 
+                    !EditorGUILayout.Foldout(!_observer.unfoldedComponents[componentIndex], type.Name, true, boldFoldout);
             }
             else
             {

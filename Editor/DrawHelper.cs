@@ -70,43 +70,12 @@ namespace Ludaludaed.KECS.Unity.Editor
         {
             var fieldValue = field.GetValue(target);
             var fieldType = field.FieldType;
-
             EditorGUI.BeginChangeCheck();
-            
-
-            if (TryGetDrawer(fieldType, out var drawer))
-            {
-                EditorGUILayout.BeginVertical();
-                var newValue = drawer.DrawAndGetNewValue(fieldType, field.Name, fieldValue, target);
-                setValue(target, newValue);
-                EditorGUILayout.EndVertical();
-            }
-            // else
-            // {
-            //     EditorGUILayout.LabelField(field.Name, fieldValue.ToString());
-            //
-            //     var indent = EditorGUI.indentLevel;
-            //     EditorGUI.indentLevel += 1;
-            //
-            //     EditorGUILayout.BeginVertical();
-            //
-            //     var memberInfos =
-            //         fieldType.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            //     foreach (var info in memberInfos)
-            //     {
-            //         DrawField(info, fieldValue, info.SetValue);
-            //         if (fieldType.IsValueType)
-            //         {
-            //             setValue(target, fieldValue);
-            //         }
-            //     }
-            //
-            //     EditorGUILayout.EndVertical();
-            //
-            //     EditorGUI.indentLevel = indent;
-            // }
-
-            
+            if (!TryGetDrawer(fieldType, out var drawer)) return EditorGUI.EndChangeCheck();
+            EditorGUILayout.BeginVertical();
+            var newValue = drawer.DrawAndGetNewValue(fieldType, field.Name, fieldValue, target);
+            setValue(target, newValue);
+            EditorGUILayout.EndVertical();
             return EditorGUI.EndChangeCheck();
         }
     }

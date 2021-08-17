@@ -12,18 +12,6 @@ namespace Ludaludaed.KECS.Unity.Editor
         object DrawAndGetNewValue(Type memberType, string memberName, object value, object target);
     }
 
-    // public class QuaternionTypeDrawer : ITypeDrawer
-    // {
-    //     private readonly Type _type = typeof(Quaternion);
-    //
-    //     public bool IsTypeDrawer(Type type) => type == _type;
-    //
-    //     public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target)
-    //     {
-    //         return EditorGUILayout.Vector3Field(memberName.ClearString(), (Vector3)((Quaternion) value).eulerAngles);
-    //     }
-    // }
-
     public class AnimationCurveTypeDrawer : ITypeDrawer
     {
         private readonly Type _type = typeof(AnimationCurve);
