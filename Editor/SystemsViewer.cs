@@ -20,18 +20,37 @@ namespace Ludaludaed.KECS.Unity.Editor
             _observer = null;
         }
 
-        private static void SystemDraw(SystemGroup group)
+        private static void SystemDraw(Systems systems)
         {
             EditorGUI.indentLevel++;
-            var data = group.GetSystems();
+            var data = systems.GetSystems();
             var colors = DrawHelper.GetColoredBoxStyle(data.Count);
             for (int i = 0, lenght = data.Count; i < lenght; i++)
             {
-                GUILayout.BeginVertical(colors[i]);
                 var runItem = data.Get(i);
-                var type = runItem.GetType();
-                group.SetActive(i,EditorGUILayout.ToggleLeft(type.Name, group.GetActive(i)));
-                GUILayout.EndVertical();
+                if (runItem is Systems systemsItem)
+                {
+                    if (runItem.IsEnable)
+                    {
+                        GUILayout.BeginVertical(GUI.skin.box);
+                        runItem.IsEnable = EditorGUILayout.ToggleLeft(systemsItem.Name, runItem.IsEnable, EditorStyles.boldLabel);
+                        SystemDraw(systemsItem);
+                        GUILayout.EndVertical();
+                    }
+                    else
+                    {
+                        GUILayout.BeginVertical(colors[i]);
+                        runItem.IsEnable = EditorGUILayout.ToggleLeft(systemsItem.Name, runItem.IsEnable, EditorStyles.boldLabel);
+                        GUILayout.EndVertical();
+                    }
+                }
+                else
+                {
+                    GUILayout.BeginVertical(colors[i]);
+                    var type = runItem.GetType();
+                    runItem.IsEnable = EditorGUILayout.ToggleLeft(type.Name, runItem.IsEnable);
+                    GUILayout.EndVertical();
+                }
             }
             EditorGUI.indentLevel--;
         }

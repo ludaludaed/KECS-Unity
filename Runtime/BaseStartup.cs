@@ -5,10 +5,10 @@ namespace Ludaludaed.KECS.Unity
 {
     public abstract class BaseStartup : MonoBehaviour
     {
+        public Systems UpdateSystems;
+        public Systems FixedUpdateSystems;
+        public Systems LateUpdateSystems;
         public World World;
-        public SystemGroup UpdateSystems;
-        public SystemGroup FixedUpdateSystems;
-        public SystemGroup LateUpdateSystems;
 
         [SerializeField]
 #if UNITY_EDITOR
@@ -16,8 +16,7 @@ namespace Ludaludaed.KECS.Unity
 #endif
         private string worldName;
 
-        [Header("World configuration")] 
-        public int EntitiesCapacity = WorldConfig.DefaultEntities;
+        [Header("World configuration")] public int EntitiesCapacity = WorldConfig.DefaultEntities;
         public int ArchetypesCapacity = WorldConfig.DefaultArchetypes;
         public int ComponentsCapacity = WorldConfig.DefaultComponents;
         public int QueriesCapacity = WorldConfig.DefaultQueries;
@@ -34,9 +33,9 @@ namespace Ludaludaed.KECS.Unity
             });
 
 
-            UpdateSystems = new SystemGroup(World, "Update");
-            FixedUpdateSystems = new SystemGroup(World, "Fixed Update");
-            LateUpdateSystems = new SystemGroup(World, "Late Update");
+            UpdateSystems = new Systems(World, "Update");
+            FixedUpdateSystems = new Systems(World, "Fixed Update");
+            LateUpdateSystems = new Systems(World, "Late Update");
 
 #if UNITY_EDITOR && DEBUG
             WorldObserver.Create(World);
@@ -58,25 +57,24 @@ namespace Ludaludaed.KECS.Unity
         public void Update()
         {
             World.ExecuteTasks();
-            UpdateSystems.Update(Time.deltaTime);
+            UpdateSystems.OnUpdate(Time.deltaTime);
         }
 
         public void FixedUpdate()
         {
-            FixedUpdateSystems.Update(Time.deltaTime);
+            FixedUpdateSystems.OnUpdate(Time.deltaTime);
         }
 
         public void LateUpdate()
         {
-            LateUpdateSystems.Update(Time.deltaTime);
+            LateUpdateSystems.OnUpdate(Time.deltaTime);
         }
 
         public void OnDestroy()
         {
-            UpdateSystems.Destroy();
-            FixedUpdateSystems.Destroy();
-            LateUpdateSystems.Destroy();
-            World.Destroy();
+            UpdateSystems.OnDestroy();
+            FixedUpdateSystems.OnDestroy();
+            LateUpdateSystems.OnDestroy();
         }
     }
 }

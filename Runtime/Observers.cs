@@ -126,30 +126,30 @@ namespace Ludaludaed.KECS.Unity
 
     public sealed class SystemsObserver : MonoBehaviour, ISystemsDebugListener
     {
-        private FastList<SystemGroup> _systems;
+        private FastList<Systems> _systems;
 
         public static SystemsObserver Create()
         {
             var go = new GameObject("|KECS| [SYSTEMS]");
             DontDestroyOnLoad(go);
             var observer = go.AddComponent<SystemsObserver>();
-            observer._systems = new FastList<SystemGroup>();
+            observer._systems = new FastList<Systems>();
             return observer;
         }
 
 
-        public SystemsObserver Add(SystemGroup systemGroup)
+        public SystemsObserver Add(Systems systems)
         {
-            _systems.Add(systemGroup);
-            systemGroup.AddDebugListener(this);
+            _systems.Add(systems);
+            systems.AddDebugListener(this);
             return this;
         }
 
 
-        public FastList<SystemGroup> GetSystems() => _systems;
+        public FastList<Systems> GetSystems() => _systems;
 
 
-        public void OnSystemsDestroyed(SystemGroup systemGroup)
+        public void OnSystemsDestroyed(Systems systems)
         {
             OnDestroy();
             Destroy(gameObject);
