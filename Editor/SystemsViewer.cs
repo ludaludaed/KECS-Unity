@@ -24,33 +24,21 @@ namespace Ludaludaed.KECS.Unity.Editor
         {
             EditorGUI.indentLevel++;
             var data = systems.GetSystems();
-            var colors = DrawHelper.GetColoredBoxStyle(data.Count);
             for (int i = 0, lenght = data.Count; i < lenght; i++)
             {
+                GUILayout.BeginVertical();
                 var runItem = data.Get(i);
                 if (runItem is Systems systemsItem)
                 {
-                    if (runItem.IsEnable)
-                    {
-                        GUILayout.BeginVertical(GUI.skin.box);
-                        runItem.IsEnable = EditorGUILayout.ToggleLeft(systemsItem.Name, runItem.IsEnable, EditorStyles.boldLabel);
-                        SystemDraw(systemsItem);
-                        GUILayout.EndVertical();
-                    }
-                    else
-                    {
-                        GUILayout.BeginVertical(colors[i]);
-                        runItem.IsEnable = EditorGUILayout.ToggleLeft(systemsItem.Name, runItem.IsEnable, EditorStyles.boldLabel);
-                        GUILayout.EndVertical();
-                    }
+                    runItem.IsEnable = EditorGUILayout.ToggleLeft($"System group: {systemsItem.Name}", runItem.IsEnable);
+                    if (runItem.IsEnable) SystemDraw(systemsItem);
                 }
                 else
                 {
-                    GUILayout.BeginVertical(colors[i]);
                     var type = runItem.GetType();
                     runItem.IsEnable = EditorGUILayout.ToggleLeft(type.Name, runItem.IsEnable);
-                    GUILayout.EndVertical();
                 }
+                GUILayout.EndVertical();
             }
             EditorGUI.indentLevel--;
         }
@@ -65,7 +53,7 @@ namespace Ludaludaed.KECS.Unity.Editor
             foreach (var group in systemsGroup)
             {
                 GUILayout.BeginVertical(GUI.skin.box);
-                EditorGUILayout.LabelField(group.Name, EditorStyles.boldLabel);
+                EditorGUILayout.LabelField($"System group: {group.Name}", EditorStyles.boldLabel);
                 SystemDraw(group);
                 GUILayout.EndVertical();
             }

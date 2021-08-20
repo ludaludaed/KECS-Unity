@@ -75,6 +75,7 @@ namespace Ludaludaed.KECS.Unity
             UpdateSystems.OnDestroy();
             FixedUpdateSystems.OnDestroy();
             LateUpdateSystems.OnDestroy();
+            World.Destroy();
         }
     }
 }
