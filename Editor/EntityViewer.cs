@@ -10,8 +10,7 @@ namespace Ludaludaed.KECS.Unity.Editor
     [CustomEditor(typeof(EntityObserver))]
     public class EntityViewer : UnityEditor.Editor
     {
-        private static object[] _componentsCache = new object[32];
-        private static int[] _componentsIndexes = new int[32];
+        private static (int, object)[] _componentsCache = new (int, object)[32];
 
         private EntityObserver _observer;
 
@@ -19,7 +18,7 @@ namespace Ludaludaed.KECS.Unity.Editor
         {
             if (targets.Length == 1)
             {
-                _observer = (EntityObserver) target;
+                _observer = (EntityObserver)target;
                 DrawEntity(_observer.Entity);
             }
 
@@ -53,10 +52,9 @@ namespace Ludaludaed.KECS.Unity.Editor
             DrawAddComponentMenu(_observer.Entity);
 
             var count = _observer.Entity.GetComponents(ref _componentsCache);
-            _observer.Entity.GetComponentsIndexes(ref _componentsIndexes);
 
             var colors = DrawHelper.GetColoredBoxStyle(count);
-            var boldText = new GUIStyle(GUI.skin.label) {fontStyle = FontStyle.Bold};
+            var boldText = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold };
 
             EditorGUILayout.LabelField($"Components({count})", boldText);
             EditorGUILayout.Space();
@@ -71,8 +69,8 @@ namespace Ludaludaed.KECS.Unity.Editor
 
         private void DrawComponent(int idx, GUIStyle style)
         {
-            var component = _componentsCache[idx];
-            var componentIndex = _componentsIndexes[idx];
+            var component = _componentsCache[idx].Item2;
+            var componentIndex = _componentsCache[idx].Item1;
             var type = component.GetType();
 
             ArrayExtension.EnsureLength(ref _observer.unfoldedComponents, componentIndex);
@@ -82,7 +80,7 @@ namespace Ludaludaed.KECS.Unity.Editor
             GUILayout.BeginVertical(style);
             EditorGUILayout.BeginHorizontal();
 
-            var boldText = new GUIStyle(GUI.skin.label) {fontStyle = FontStyle.Bold};
+            var boldText = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold };
 
             var boldFoldout = EditorStyles.foldout;
             boldFoldout.fontStyle = FontStyle.Bold;
@@ -90,8 +88,9 @@ namespace Ludaludaed.KECS.Unity.Editor
             GUILayout.Space(15);
             if (memberInfos.Length > 0)
             {
-                _observer.unfoldedComponents[componentIndex] = 
-                    !EditorGUILayout.Foldout(!_observer.unfoldedComponents[componentIndex], type.Name, true, boldFoldout);
+                _observer.unfoldedComponents[componentIndex] =
+                    !EditorGUILayout.Foldout(!_observer.unfoldedComponents[componentIndex], type.Name, true,
+                        boldFoldout);
             }
             else
             {
@@ -128,7 +127,7 @@ namespace Ludaludaed.KECS.Unity.Editor
         private static void DrawAddComponentMenu(in Entity entity)
         {
             var componentInfos = new List<Type>();
-            var componentNames = new List<string>() {"Add"};
+            var componentNames = new List<string>() { "Add" };
 
             var arrayOfComponentsInfos = EcsTypeManager.GetAllTypes();
 

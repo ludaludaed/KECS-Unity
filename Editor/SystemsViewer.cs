@@ -30,7 +30,8 @@ namespace Ludaludaed.KECS.Unity.Editor
                 var runItem = data.Get(i);
                 if (runItem is Systems systemsItem)
                 {
-                    runItem.IsEnable = EditorGUILayout.ToggleLeft($"System group: {systemsItem.Name}", runItem.IsEnable);
+                    runItem.IsEnable = EditorGUILayout.ToggleLeft($"System group: {systemsItem.Name}",
+                        runItem.IsEnable, EditorStyles.boldLabel);
                     if (runItem.IsEnable) SystemDraw(systemsItem);
                 }
                 else
@@ -38,8 +39,10 @@ namespace Ludaludaed.KECS.Unity.Editor
                     var type = runItem.GetType();
                     runItem.IsEnable = EditorGUILayout.ToggleLeft(type.Name, runItem.IsEnable);
                 }
+
                 GUILayout.EndVertical();
             }
+
             EditorGUI.indentLevel--;
         }
 
@@ -47,8 +50,8 @@ namespace Ludaludaed.KECS.Unity.Editor
         {
             var savedState = GUI.enabled;
             GUI.enabled = true;
-            var systemsGroup = _observer.GetSystems();
-            if(systemsGroup == null) return;
+            var systemsGroup = _observer.Systems;
+            if (systemsGroup == null) return;
 
             foreach (var group in systemsGroup)
             {
@@ -57,7 +60,7 @@ namespace Ludaludaed.KECS.Unity.Editor
                 SystemDraw(group);
                 GUILayout.EndVertical();
             }
-            
+
             GUI.enabled = savedState;
         }
     }
