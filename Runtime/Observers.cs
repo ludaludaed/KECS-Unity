@@ -19,7 +19,7 @@ namespace Ludaludaed.KECS.Unity
         {
             if (world == null)
             {
-                throw new Exception("World is null and cannot be observable");
+                throw new Exception("|KECS| World is null and cannot be observable");
             }
 
             var gameObj = new GameObject($"|KECS| [WORLD] Name: {world.Name}");
@@ -40,11 +40,8 @@ namespace Ludaludaed.KECS.Unity
             return gameObj;
         }
 
-        public WorldInfo GetInfo()
-        {
-            return _world.GetInfo();
-        }
-
+        public WorldInfo GetInfo() => _world.GetInfo();
+        
         public void OnEntityCreated(in Entity entity)
         {
             if (_isDestroyed) return;
@@ -63,7 +60,7 @@ namespace Ludaludaed.KECS.Unity
                 go.GetComponent<EntityObserver>().Entity = entity;
             }
             
-            go.name = $"[{entity.Id:D4}] Entity";
+            go.name = $"{entity.Id}\t Entity";
             go.SetActive(true);
         }
         
@@ -74,11 +71,11 @@ namespace Ludaludaed.KECS.Unity
             var debugGO = EntityGameObjects.Get(entity.Id);
             if(!entity.Has<ViewComponent>())
             {
-                debugGO.name = $"[{entity.Id:D4}] Entity";
+                debugGO.name = $"{entity.Id}\t Entity";
                 return;
             }
             ref var view = ref entity.Get<ViewComponent>();
-            debugGO.name = $"[{entity.Id:D4}] {view.GameObject.name}";
+            debugGO.name = $"{entity.Id}\t {view.GameObject.name}";
         }
         
 

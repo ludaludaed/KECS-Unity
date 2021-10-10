@@ -16,7 +16,7 @@ namespace Ludaludaed.KECS.Unity.Editor
         private const string ComponentTemplate = "Component.cs.txt";
 
         [MenuItem("Assets/Create/KECS/Create Startup", false, -200)]
-        private static void CreateStartupTpl()
+        private static void CreateStartupTemplate()
         {
             CreateAndRenameAsset($"{GetAssetPath()}/Startup.cs",
                 EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
@@ -24,7 +24,7 @@ namespace Ludaludaed.KECS.Unity.Editor
         }
 
         [MenuItem("Assets/Create/KECS/Create Component", false, -199)]
-        private static void CreateComponentTpl()
+        private static void CreateComponentTemplate()
         {
             CreateAndRenameAsset($"{GetAssetPath()}/Component.cs",
                 EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
@@ -32,7 +32,7 @@ namespace Ludaludaed.KECS.Unity.Editor
         }
 
         [MenuItem("Assets/Create/KECS/Systems/Create BaseSystem", false, -198)]
-        private static void CreateInitSystemTpl()
+        private static void CreateBaseSystemTemplate()
         {
             CreateAndRenameAsset($"{GetAssetPath()}/BaseSystem.cs",
                 EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
@@ -40,7 +40,7 @@ namespace Ludaludaed.KECS.Unity.Editor
         }
 
         [MenuItem("Assets/Create/KECS/Systems/Create UpdateSystem", false, -197)]
-        private static void CreateUpdateSystemTpl()
+        private static void CreateUpdateSystemTemplate()
         {
             CreateAndRenameAsset($"{GetAssetPath()}/UpdateSystem.cs",
                 EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D,
@@ -49,16 +49,13 @@ namespace Ludaludaed.KECS.Unity.Editor
 
         private static string CreateTemplate(string proto, string fileName, string suffix)
         {
-            if (string.IsNullOrEmpty(fileName))
-            {
+            if (string.IsNullOrEmpty(fileName)) 
                 return "Invalid filename";
-            }
-
+            
             var ns = EditorSettings.projectGenerationRootNamespace.Trim();
-            if (string.IsNullOrEmpty(EditorSettings.projectGenerationRootNamespace))
-            {
-                ns = "YourNS";
-            }
+            if (string.IsNullOrEmpty(EditorSettings.projectGenerationRootNamespace)) 
+                ns = "DefaultNS";
+            
 
             proto = proto.Replace("#NS#", ns);
             proto = proto.Replace("#SCRIPTNAME#", Path.GetFileNameWithoutExtension(fileName));
