@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 namespace Ludaludaed.KECS.Unity.Editor
 {
@@ -28,11 +29,14 @@ namespace Ludaludaed.KECS.Unity.Editor
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 var types = GetTypesWithAttribute(attrType, assembly);
-
+                
                 foreach (var type in types)
                 {
-                    var regComponentGeneric = _regComponentMethod.MakeGenericMethod(type);
-                    regComponentGeneric.Invoke(null, null);
+                    if (!type.IsGenericType)
+                    {
+                        var regComponentGeneric = _regComponentMethod.MakeGenericMethod(type);
+                        regComponentGeneric.Invoke(null, null);
+                    }
                 }
             }
         }
@@ -60,17 +64,17 @@ namespace Ludaludaed.KECS.Unity.Editor
             return (bool) hasComponentGeneric.Invoke(null, new object[] {entity});
         }
 
-        public static void SetComponent<T>(this Entity entity, T component) where T : struct
+        public static void SetComponent<T>(Entity entity, T component) where T : struct
         {
             entity.Set(component);
         }
 
-        public static void RemoveComponent<T>(this Entity entity) where T : struct
+        public static void RemoveComponent<T>(Entity entity) where T : struct
         {
             entity.Remove<T>();
         }
 
-        public static bool HasComponent<T>(this Entity entity) where T : struct
+        public static bool HasComponent<T>(Entity entity) where T : struct
         {
             return entity.Has<T>();
         }
