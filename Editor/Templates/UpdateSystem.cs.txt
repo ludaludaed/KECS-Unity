@@ -2,15 +2,11 @@ using Ludaludaed.KECS;
 using Ludaludaed.KECS.Unity;
 using UnityEngine;
 
-namespace #NS#
-{
-    public class #SCRIPTNAME# : UpdateSystem
-    {
-        public override void OnUpdate(float deltaTime)
-        {
+namespace #NS# {
+    public class #SCRIPTNAME# : UpdateSystem {
+        public override void OnUpdate(float deltaTime) {
             _world.CreateQuery()
-                .ForEach((Entity entity) =>
-                {
+                .ForEach((Entity entity) => {
 				    
                 });
         }

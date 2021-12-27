@@ -1,12 +1,10 @@
 ﻿using Ludaludaed.KECS.Unity;
 using UnityEngine;
 
-namespace #NS# 
-{
+namespace #NS# {
 	[System.Serializable]
 	[AutoRegistrationComponent]
-    public struct #SCRIPTNAME#Component
-    {
+    public struct #SCRIPTNAME#Component {
         
     }
     
