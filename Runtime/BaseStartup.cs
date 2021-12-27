@@ -1,10 +1,8 @@
 using System;
 using UnityEngine;
 
-namespace Ludaludaed.KECS.Unity
-{
-    public abstract class BaseStartup : MonoBehaviour
-    {
+namespace Ludaludaed.KECS.Unity {
+    public abstract class BaseStartup : MonoBehaviour {
         public Systems UpdateSystems;
         public Systems FixedUpdateSystems;
         public Systems LateUpdateSystems;
@@ -21,11 +19,9 @@ namespace Ludaludaed.KECS.Unity
         public int ComponentsCapacity = WorldConfig.DefaultComponents;
         public int QueriesCapacity = WorldConfig.DefaultQueries;
 
-        public void Awake()
-        {
+        public void Awake() {
             worldName = gameObject.scene.name;
-            World = Worlds.Create(worldName, new WorldConfig()
-            {
+            World = Worlds.Create(worldName, new WorldConfig() {
                 Entities = EntitiesCapacity,
                 Archetypes = ArchetypesCapacity,
                 Components = ComponentsCapacity,
@@ -54,24 +50,20 @@ namespace Ludaludaed.KECS.Unity
 
         public abstract void Bootstrap();
 
-        public void Update()
-        {
+        public void Update() {
             World.ExecuteTasks();
             UpdateSystems.OnUpdate(Time.deltaTime);
         }
 
-        public void FixedUpdate()
-        {
+        public void FixedUpdate() {
             FixedUpdateSystems.OnUpdate(Time.deltaTime);
         }
 
-        public void LateUpdate()
-        {
+        public void LateUpdate() {
             LateUpdateSystems.OnUpdate(Time.deltaTime);
         }
 
-        public void OnDestroy()
-        {
+        public void OnDestroy() {
             UpdateSystems.OnDestroy();
             FixedUpdateSystems.OnDestroy();
             LateUpdateSystems.OnDestroy();

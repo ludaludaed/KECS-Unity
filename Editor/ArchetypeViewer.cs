@@ -2,15 +2,12 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Ludaludaed.KECS.Unity.Editor
-{
+namespace Ludaludaed.KECS.Unity.Editor {
     [CustomEditor(typeof(ArchetypeObserver))]
-    public class ArchetypeViewer : UnityEditor.Editor
-    {
+    public class ArchetypeViewer : UnityEditor.Editor {
         private ArchetypeObserver _observer;
 
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI() {
             var guiEnabled = GUI.enabled;
             GUI.enabled = true;
 
@@ -18,14 +15,12 @@ namespace Ludaludaed.KECS.Unity.Editor
             GUILayout.BeginVertical(GUI.skin.box);
 
             EditorGUILayout.LabelField($"Entities: {count}", EditorStyles.boldLabel);
-            if (count > 0)
-            {
+            if (count > 0) {
                 var colors = DrawHelper.GetColoredBoxStyle(count);
                 var ego = _observer.worldObserver.EntityGameObjects;
 
                 var counter = 0;
-                foreach (var entity in _observer.Archetype)
-                {
+                foreach (var entity in _observer.Archetype) {
                     if (!ego.Contains(entity)) continue;
                     ref var entityGo = ref ego.Get(entity);
                     GUILayout.BeginVertical(colors[counter++]);
@@ -40,13 +35,11 @@ namespace Ludaludaed.KECS.Unity.Editor
             EditorUtility.SetDirty(target);
         }
 
-        private void OnEnable()
-        {
+        private void OnEnable() {
             _observer = target as ArchetypeObserver;
         }
 
-        private void OnDisable()
-        {
+        private void OnDisable() {
             _observer = null;
         }
     }

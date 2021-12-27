@@ -1,15 +1,9 @@
-﻿namespace Ludaludaed.KECS.Unity
-{
-    public struct OnBecameInvisibleEvent
-    {
-    }
+﻿namespace Ludaludaed.KECS.Unity {
+    public struct OnBecameInvisibleEvent { }
 
-    public struct OnBecameVisibleEvent
-    {
-    }
+    public struct OnBecameVisibleEvent { }
 
-    public struct OnCollisionEnter2DEvent
-    {
+    public struct OnCollisionEnter2DEvent {
         public Entity other;
     }
 }

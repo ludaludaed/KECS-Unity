@@ -3,10 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Ludaludaed.KECS.Unity
-{
-    public class WorldObserver : MonoBehaviour, IWorldDebugListener
-    {
+namespace Ludaludaed.KECS.Unity {
+    public class WorldObserver : MonoBehaviour, IWorldDebugListener {
         private World _world;
         private Transform _entitiesGO;
         private Transform _archetypesGO;
@@ -15,10 +13,8 @@ namespace Ludaludaed.KECS.Unity
 
         public readonly HandleMap<GameObject> EntityGameObjects = new HandleMap<GameObject>(1024);
 
-        public static GameObject Create(World world)
-        {
-            if (world == null)
-            {
+        public static GameObject Create(World world) {
+            if (world == null) {
                 throw new Exception("|KECS| World is null and cannot be observable");
             }
 
@@ -41,46 +37,40 @@ namespace Ludaludaed.KECS.Unity
         }
 
         public WorldInfo GetInfo() => _world.GetInfo();
-        
-        public void OnEntityCreated(in Entity entity)
-        {
+
+        public void OnEntityCreated(in Entity entity) {
             if (_isDestroyed) return;
             GameObject go;
-            if (!EntityGameObjects.Contains(entity.Id))
-            {
+            if (!EntityGameObjects.Contains(entity.Id)) {
                 go = new GameObject();
                 go.transform.SetParent(_entitiesGO, false);
                 var unityEntity = go.AddComponent<EntityObserver>();
                 unityEntity.Entity = entity;
                 EntityGameObjects.Set(entity.Id, go);
-            }
-            else
-            {
+            } else {
                 go = EntityGameObjects.Get(entity.Id);
                 go.GetComponent<EntityObserver>().Entity = entity;
             }
-            
+
             go.name = $"{entity.Id}\t Entity";
             go.SetActive(true);
         }
-        
 
-        public void OnEntityChanged(in Entity entity)
-        {
-            if(!_world.IsAlive()) return;
+
+        public void OnEntityChanged(in Entity entity) {
+            if (!_world.IsAlive()) return;
             var debugGO = EntityGameObjects.Get(entity.Id);
-            if(!entity.Has<ViewComponent>())
-            {
+            if (!entity.Has<ViewComponent>()) {
                 debugGO.name = $"{entity.Id}\t Entity";
                 return;
             }
+
             ref var view = ref entity.Get<ViewComponent>();
             debugGO.name = $"{entity.Id}\t {view.GameObject.name}";
         }
-        
 
-        public void OnEntityDestroyed(in Entity entity)
-        {
+
+        public void OnEntityDestroyed(in Entity entity) {
             if (_isDestroyed) return;
             if (!EntityGameObjects.Contains(entity.Id)) return;
             var go = EntityGameObjects.Get(entity.Id);
@@ -88,8 +78,7 @@ namespace Ludaludaed.KECS.Unity
             go.SetActive(false);
         }
 
-        public void OnArchetypeCreated(Archetype archetype)
-        {
+        public void OnArchetypeCreated(Archetype archetype) {
             if (_isDestroyed) return;
             var go = new GameObject();
             go.transform.SetParent(_archetypesGO);
@@ -99,34 +88,29 @@ namespace Ludaludaed.KECS.Unity
             observer.Archetype = archetype;
 
             var goName = "Archetype ";
-            foreach (var typeIdx in archetype.Signature)
-            {
+            foreach (var typeIdx in archetype.Signature) {
                 goName += $"[{EcsTypeManager.GetTypeByIndex(typeIdx).Name}] ";
             }
 
             go.name = goName;
         }
 
-        public void OnWorldDestroyed(World world)
-        {
+        public void OnWorldDestroyed(World world) {
             OnDestroy();
             Destroy(gameObject);
         }
 
-        public void OnDestroy()
-        {
+        public void OnDestroy() {
             if (_world == null) return;
             _world.RemoveDebugListener(this);
             _world = null;
         }
     }
 
-    public sealed class SystemsObserver : MonoBehaviour, ISystemsDebugListener
-    {
+    public sealed class SystemsObserver : MonoBehaviour, ISystemsDebugListener {
         public FastList<Systems> Systems;
 
-        public static SystemsObserver Create()
-        {
+        public static SystemsObserver Create() {
             var go = new GameObject("|KECS| [SYSTEMS]");
             DontDestroyOnLoad(go);
             var observer = go.AddComponent<SystemsObserver>();
@@ -135,39 +119,34 @@ namespace Ludaludaed.KECS.Unity
         }
 
 
-        public SystemsObserver Add(Systems systems)
-        {
+        public SystemsObserver Add(Systems systems) {
             Systems.Add(systems);
             systems.AddDebugListener(this);
             return this;
         }
 
 
-        public void OnSystemsDestroyed(Systems systems)
-        {
+        public void OnSystemsDestroyed(Systems systems) {
             OnDestroy();
             Destroy(gameObject);
         }
 
-        public void OnDestroy()
-        {
+        public void OnDestroy() {
             if (Systems == null) return;
-            foreach (var system in Systems)
-            {
+            foreach (var system in Systems) {
                 system.RemoveDebugListener(this);
             }
+
             Systems.Clear();
         }
     }
 
-    public sealed class ArchetypeObserver : MonoBehaviour
-    {
+    public sealed class ArchetypeObserver : MonoBehaviour {
         public WorldObserver worldObserver;
         public Archetype Archetype;
     }
 
-    public sealed class EntityObserver : MonoBehaviour
-    {
+    public sealed class EntityObserver : MonoBehaviour {
         public Entity Entity;
         public bool[] unfoldedComponents = new bool[256];
     }
