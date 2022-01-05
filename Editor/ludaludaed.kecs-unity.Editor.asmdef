@@ -1,0 +1,17 @@
+{
+    "name": "ludaludaed.kecs-unity.Editor",
+    "rootNamespace": "",
+    "references": [
+        "ludaludaed.kecs-unity",
+        "ludaludaed.kecs"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
