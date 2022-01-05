@@ -4,6 +4,7 @@
     public struct OnBecameVisibleEvent { }
 
     public struct OnCollisionEnter2DEvent {
-        public Entity other;
+        public Entity first;
+        public Entity second;
     }
 }

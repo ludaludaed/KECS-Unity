@@ -23,32 +23,27 @@ namespace Ludaludaed.KECS.Unity.Editor {
                 if (runItem is Systems systemsItem) {
                     runItem.IsEnable = EditorGUILayout.ToggleLeft($"System group: {systemsItem.Name}",
                         runItem.IsEnable, EditorStyles.boldLabel);
-                    if (runItem.IsEnable) SystemDraw(systemsItem);
+                    if (runItem.IsEnable) {
+                        SystemDraw(systemsItem);
+                    }
                 } else {
                     var type = runItem.GetType();
-                    runItem.IsEnable = EditorGUILayout.ToggleLeft(type.Name, runItem.IsEnable);
+                    runItem.IsEnable = EditorGUILayout.ToggleLeft(type.GetCleanGenericTypeName(), runItem.IsEnable);
                 }
-
                 GUILayout.EndVertical();
             }
-
             EditorGUI.indentLevel--;
         }
 
         public override void OnInspectorGUI() {
-            var savedState = GUI.enabled;
-            GUI.enabled = true;
             var systemsGroup = _observer.Systems;
             if (systemsGroup == null) return;
-
             foreach (var group in systemsGroup) {
                 GUILayout.BeginVertical(GUI.skin.box);
                 EditorGUILayout.LabelField($"System group: {group.Name}", EditorStyles.boldLabel);
                 SystemDraw(group);
                 GUILayout.EndVertical();
             }
-
-            GUI.enabled = savedState;
         }
     }
 }
