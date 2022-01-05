@@ -87,7 +87,7 @@ namespace Ludaludaed.KECS.Unity {
             observer.worldObserver = this;
             observer.Archetype = archetype;
 
-            var goName = "Archetype ";
+            var goName = $"Archetype ";
             foreach (var typeIdx in archetype.Signature) {
                 goName += $"[{EcsTypeManager.GetTypeByIndex(typeIdx).Name}] ";
             }
@@ -148,7 +148,11 @@ namespace Ludaludaed.KECS.Unity {
 
     public sealed class EntityObserver : MonoBehaviour {
         public Entity Entity;
-        public bool[] unfoldedComponents = new bool[256];
+        public readonly BitSet unfoldedComponents = new BitSet(256);
+
+        private void Awake() {
+            unfoldedComponents.SetAll();
+        }
     }
 }
 #endif

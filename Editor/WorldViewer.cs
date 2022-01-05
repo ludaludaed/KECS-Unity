@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -22,4 +21,3 @@ namespace Ludaludaed.KECS.Unity.Editor {
         }
     }
 }
-#endif

@@ -1,9 +1,9 @@
-#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Ludaludaed.KECS.Unity.Editor {
     [CustomEditor(typeof(EntityObserver))]
@@ -61,26 +61,25 @@ namespace Ludaludaed.KECS.Unity.Editor {
             var component = _componentsCache[idx].Item2;
             var componentIndex = _componentsCache[idx].Item1;
             var type = component.GetType();
-
-            ArrayExtension.EnsureLength(ref _observer.unfoldedComponents, componentIndex);
-
             var memberInfos = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-
             GUILayout.BeginVertical(style);
+
             EditorGUILayout.BeginHorizontal();
-
-            var boldText = new GUIStyle(GUI.skin.label) {fontStyle = FontStyle.Bold};
-
             var boldFoldout = EditorStyles.foldout;
             boldFoldout.fontStyle = FontStyle.Bold;
-
             GUILayout.Space(15);
             if (memberInfos.Length > 0) {
-                _observer.unfoldedComponents[componentIndex] =
-                    !EditorGUILayout.Foldout(!_observer.unfoldedComponents[componentIndex], type.Name, true,
-                        boldFoldout);
+                var foldout = EditorGUILayout.Foldout(_observer.unfoldedComponents.GetBit(componentIndex),
+                    type.GetCleanGenericTypeName(), true, boldFoldout);
+                if (foldout) {
+                    _observer.unfoldedComponents.SetBit(componentIndex);
+                } else {
+                    _observer.unfoldedComponents.ClearBit(componentIndex);
+                }
             } else {
-                EditorGUILayout.LabelField(type.Name, boldText);
+                EditorGUILayout.LabelField(type.GetCleanGenericTypeName(),
+                    new GUIStyle(GUI.skin.label) {fontStyle = FontStyle.Bold});
+                _observer.unfoldedComponents.ClearBit(componentIndex);
             }
 
             if (GUILayout.Button("✘", GUILayout.Width(19), GUILayout.Height(19))) {
@@ -90,21 +89,50 @@ namespace Ludaludaed.KECS.Unity.Editor {
 
             EditorGUILayout.EndHorizontal();
 
-            if (!_observer.unfoldedComponents[componentIndex] && memberInfos.Length > 0) {
+            if (_observer.unfoldedComponents.GetBit(componentIndex)) {
                 var indent = EditorGUI.indentLevel;
                 EditorGUI.indentLevel++;
-
-                var changed = false;
-
                 foreach (var info in memberInfos) {
-                    if (DrawHelper.DrawField(info, component, info.SetValue)) changed = true;
+                    DrawComponentField(info, component, _observer.Entity);
                 }
 
-                if (changed) _observer.Entity.SetExecute(component);
                 EditorGUI.indentLevel = indent;
             }
 
             GUILayout.EndVertical();
+        }
+
+        private static void DrawComponentField(FieldInfo field, object target, Entity entity) {
+            var fieldValue = field.GetValue(target);
+            var fieldType = field.FieldType;
+            var (renderer, changed, newValue) = InspectorDrawer.Draw(field.Name, fieldType, fieldValue);
+            if (!renderer) {
+                if (fieldType == typeof(Object) || fieldType.IsSubclassOf(typeof(Object))) {
+                    GUILayout.BeginVertical();
+                    var newObjValue = EditorGUILayout.ObjectField(field.Name.ClearString(), (Object) fieldValue,
+                        fieldType, true);
+                    if (newObjValue != (Object) fieldValue) {
+                        field.SetValue(target, newObjValue);
+                        entity.SetExecute(target);
+                    }
+
+                    GUILayout.EndVertical();
+                } else if (fieldType.IsEnum) {
+                    var (enumChanged, enumNewValue) = InspectorDrawer.DrawEnum(field.Name, fieldValue,
+                        Attribute.IsDefined(fieldType, typeof(FlagsAttribute)));
+                    if (!enumChanged) return;
+                    field.SetValue(target, enumNewValue);
+                    entity.SetExecute(target);
+                } else {
+                    EditorGUILayout.LabelField(field.Name, fieldValue.ToString(),
+                        new GUIStyle(GUI.skin.label) {fontStyle = FontStyle.Bold});
+                }
+            } else {
+                if (changed) {
+                    field.SetValue(target, newValue);
+                    entity.SetExecute(target);
+                }
+            }
         }
 
         private static void DrawAddComponentMenu(in Entity entity) {
@@ -116,7 +144,7 @@ namespace Ludaludaed.KECS.Unity.Editor {
             for (int i = 0, lenght = arrayOfComponentsInfos.Length; i < lenght; i++) {
                 if (entity.HasExecute(arrayOfComponentsInfos[i])) continue;
                 componentInfos.Add(arrayOfComponentsInfos[i]);
-                componentNames.Add(arrayOfComponentsInfos[i].Name);
+                componentNames.Add(arrayOfComponentsInfos[i].GetCleanGenericTypeName());
             }
 
             var index = EditorGUILayout.Popup(0, componentNames.ToArray());
@@ -125,4 +153,3 @@ namespace Ludaludaed.KECS.Unity.Editor {
         }
     }
 }
-#endif

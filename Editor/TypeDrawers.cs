@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System;
 using System.Text;
 using UnityEditor;
@@ -6,121 +5,123 @@ using UnityEngine;
 
 namespace Ludaludaed.KECS.Unity.Editor {
     public interface ITypeDrawer {
-        bool IsTypeDrawer(Type type);
-        object DrawAndGetNewValue(Type memberType, string memberName, object value, object target);
+        Type Type { get; }
+        (bool, object) OnDraw(string label, object value);
     }
 
-    public class AnimationCurveTypeDrawer : ITypeDrawer {
-        private readonly Type _type = typeof(AnimationCurve);
+    public abstract class TypeDrawer<T> : ITypeDrawer {
+        public Type Type { get; } = typeof(T);
 
-        public bool IsTypeDrawer(Type type) => type == _type;
+        public (bool, object) OnDraw(string label, object value) {
+            if (value == null) {
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.SelectableLabel(label, GUILayout.MaxWidth(EditorGUIUtility.labelWidth - 16),
+                    GUILayout.MaxHeight(EditorGUIUtility.singleLineHeight));
+                EditorGUILayout.LabelField("null", GUILayout.MaxHeight(EditorGUIUtility.singleLineHeight));
+                GUILayout.EndHorizontal();
+                return (default, default);
+            }
 
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
-            return EditorGUILayout.CurveField(memberName.ClearString(), (AnimationCurve) value);
+            var typedValue = (T) value;
+            var changed = OnTypedDraw(label.ClearString(), ref typedValue);
+            return changed ? (true, typedValue) : (default, default);
+        }
+
+        protected abstract bool OnTypedDraw(string label, ref T value);
+    }
+
+    public sealed class AnimationCurveTypeDrawer : TypeDrawer<AnimationCurve> {
+        protected override bool OnTypedDraw(string label, ref AnimationCurve value) {
+            var newValue = EditorGUILayout.CurveField(label, value);
+            if (newValue.Equals(value)) return false;
+            value = newValue;
+            return true;
         }
     }
 
-    public class BoolTypeDrawer : ITypeDrawer {
-        private readonly Type _type = typeof(bool);
-        public bool IsTypeDrawer(Type type) => type == _type;
-
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
-            return EditorGUILayout.Toggle(memberName.ClearString(), (bool) value);
+    public sealed class BoolTypeDrawer : TypeDrawer<bool> {
+        protected override bool OnTypedDraw(string label, ref bool value) {
+            var newValue = EditorGUILayout.Toggle(label, value);
+            if (newValue.Equals(value)) return false;
+            value = newValue;
+            return true;
         }
     }
 
-    public class BoundsTypeDrawer : ITypeDrawer {
-        private readonly Type _type = typeof(Bounds);
-        public bool IsTypeDrawer(Type type) => type == _type;
-
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
-            return EditorGUILayout.BoundsField(memberName.ClearString(), (Bounds) value);
+    public sealed class BoundsTypeDrawer : TypeDrawer<Bounds> {
+        protected override bool OnTypedDraw(string label, ref Bounds value) {
+            var newValue = EditorGUILayout.BoundsField(label, value);
+            if (newValue.Equals(value)) return false;
+            value = newValue;
+            return true;
         }
     }
 
-    public class CharTypeDrawer : ITypeDrawer {
-        private readonly Type _type = typeof(char);
-        public bool IsTypeDrawer(Type type) => type == _type;
-
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
-            var str = EditorGUILayout.TextField(memberName.ClearString(), ((char) value).ToString());
-            return str.Length > 0 ? str[0] : default(char);
+    public sealed class ColorTypeDrawer : TypeDrawer<Color> {
+        protected override bool OnTypedDraw(string label, ref Color value) {
+            var newValue = EditorGUILayout.ColorField(label, value);
+            if (newValue.Equals(value)) return false;
+            value = newValue;
+            return true;
         }
     }
 
-    public class ColorTypeDrawer : ITypeDrawer {
-        private readonly Type _type = typeof(Color);
-        public bool IsTypeDrawer(Type type) => type == _type;
-
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
-            return EditorGUILayout.ColorField(memberName.ClearString(), (Color) value);
+    public sealed class FloatTypeDrawer : TypeDrawer<float> {
+        protected override bool OnTypedDraw(string label, ref float value) {
+            var newValue = EditorGUILayout.FloatField(label, value);
+            if (newValue.Equals(value)) return false;
+            value = newValue;
+            return true;
         }
     }
 
-    public class FloatTypeDrawer : ITypeDrawer {
-        private readonly Type _type = typeof(float);
-        public bool IsTypeDrawer(Type type) => type == _type;
-
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
-            return EditorGUILayout.FloatField(memberName.ClearString(), (float) value);
+    public sealed class IntTypeDrawer : TypeDrawer<int> {
+        protected override bool OnTypedDraw(string label, ref int value) {
+            var newValue = EditorGUILayout.IntField(label, value);
+            if (newValue.Equals(value)) return false;
+            value = newValue;
+            return true;
         }
     }
 
-    public class IntTypeDrawer : ITypeDrawer {
-        private readonly Type _type = typeof(int);
-        public bool IsTypeDrawer(Type type) => type == _type;
-
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
-            return EditorGUILayout.IntField(memberName.ClearString(), (int) value);
+    public sealed class StringTypeDrawer : TypeDrawer<string> {
+        protected override bool OnTypedDraw(string label, ref string value) {
+            var newValue = EditorGUILayout.TextField(label, value);
+            if (newValue.Equals(value)) return false;
+            value = newValue;
+            return true;
         }
     }
 
-    public class RectTypeDrawer : ITypeDrawer {
-        private readonly Type _type = typeof(Rect);
-        public bool IsTypeDrawer(Type type) => type == _type;
-
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
-            return EditorGUILayout.RectField(memberName.ClearString(), (Rect) value);
+    public sealed class Vector2Drawer : TypeDrawer<Vector2> {
+        protected override bool OnTypedDraw(string label, ref Vector2 value) {
+            var newValue = EditorGUILayout.Vector2Field(label, value);
+            if (newValue.Equals(value)) return false;
+            value = newValue;
+            return true;
         }
     }
 
-    public class StringTypeDrawer : ITypeDrawer {
-        private readonly Type _type = typeof(string);
-        public bool IsTypeDrawer(Type type) => type == _type;
-
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
-            return EditorGUILayout.TextField(memberName.ClearString(), (string) value);
+    public sealed class Vector3Drawer : TypeDrawer<Vector3> {
+        protected override bool OnTypedDraw(string label, ref Vector3 value) {
+            var newValue = EditorGUILayout.Vector3Field(label, value);
+            if (newValue.Equals(value)) return false;
+            value = newValue;
+            return true;
         }
     }
 
-    public class UnityObjectTypeDrawer : ITypeDrawer {
-        private readonly Type _type = typeof(UnityEngine.Object);
-        public bool IsTypeDrawer(Type type) => type == _type || type.IsSubclassOf(_type);
-
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
-            return EditorGUILayout.ObjectField(memberName.ClearString(), (UnityEngine.Object) value, memberType, true);
+    public sealed class QuaternionTypeDrawer : TypeDrawer<Quaternion> {
+        protected override bool OnTypedDraw(string label, ref Quaternion value) {
+            var eulerAngles = value.eulerAngles;
+            var newValue = EditorGUILayout.Vector3Field(label, eulerAngles);
+            if (newValue == eulerAngles) return false;
+            value = Quaternion.Euler(newValue);
+            return true;
         }
     }
 
-    public class Vector2TypeDrawer : ITypeDrawer {
-        private readonly Type _type = typeof(Vector2);
-        public bool IsTypeDrawer(Type type) => type == _type;
-
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
-            return EditorGUILayout.Vector2Field(memberName.ClearString(), (Vector2) value);
-        }
-    }
-
-    public class Vector3TypeDrawer : ITypeDrawer {
-        private readonly Type _type = typeof(Vector3);
-        public bool IsTypeDrawer(Type type) => type == _type;
-
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
-            return EditorGUILayout.Vector3Field(memberName.ClearString(), (Vector3) value);
-        }
-    }
-
-    public static class StringHelper {
+    public static class StringExtensions {
         public static string ClearString(this string src) {
             src = src.Replace("_", "");
             var sb = new StringBuilder();
@@ -136,6 +137,18 @@ namespace Ludaludaed.KECS.Unity.Editor {
 
             return sb.ToString();
         }
+
+        public static string GetCleanGenericTypeName(this Type type) {
+            if (!type.IsGenericType) {
+                return type.Name;
+            }
+
+            var constraints = "";
+            foreach (var constraint in type.GetGenericArguments()) {
+                constraints += constraints.Length > 0 ? $", {GetCleanGenericTypeName(constraint)}" : constraint.Name;
+            }
+
+            return $"{type.Name.Substring(0, type.Name.LastIndexOf("`", StringComparison.Ordinal))}<{constraints}>";
+        }
     }
 }
-#endif
