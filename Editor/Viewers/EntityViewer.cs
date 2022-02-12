@@ -9,6 +9,7 @@ namespace Ludaludaed.KECS.Unity.Editor {
     [CustomEditor(typeof(EntityObserver))]
     public class EntityViewer : UnityEditor.Editor {
         private static (int, object)[] _componentsCache = new (int, object)[32];
+        private static Type[] _componentsInfosCache = new Type[32];
 
         private EntityObserver _observer;
 
@@ -139,12 +140,12 @@ namespace Ludaludaed.KECS.Unity.Editor {
             var componentInfos = new List<Type>();
             var componentNames = new List<string>() {"Add"};
 
-            var arrayOfComponentsInfos = EcsTypeManager.GetAllTypes();
+            var length = EcsTypeManager.GetAllTypes(ref _componentsInfosCache);
 
-            for (int i = 0, lenght = arrayOfComponentsInfos.Length; i < lenght; i++) {
-                if (entity.HasExecute(arrayOfComponentsInfos[i])) continue;
-                componentInfos.Add(arrayOfComponentsInfos[i]);
-                componentNames.Add(arrayOfComponentsInfos[i].GetCleanGenericTypeName());
+            for (var i = 0; i < length; i++) {
+                if (entity.HasExecute(_componentsInfosCache[i])) continue;
+                componentInfos.Add(_componentsInfosCache[i]);
+                componentNames.Add(_componentsInfosCache[i].GetCleanGenericTypeName());
             }
 
             var index = EditorGUILayout.Popup(0, componentNames.ToArray());
