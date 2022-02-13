@@ -19,7 +19,7 @@ namespace Ludaludaed.KECS.Unity.Editor {
             var data = systems.GetSystems();
             for (int i = 0, lenght = data.Count; i < lenght; i++) {
                 GUILayout.BeginVertical();
-                var runItem = data.Get(i);
+                var runItem = data[i];
                 if (runItem is Systems systemsItem) {
                     runItem.IsEnable = EditorGUILayout.ToggleLeft($"System group: {systemsItem.Name}",
                         runItem.IsEnable, EditorStyles.boldLabel);
